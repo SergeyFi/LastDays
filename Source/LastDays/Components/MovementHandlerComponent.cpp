@@ -3,11 +3,15 @@
 
 #include "MovementHandlerComponent.h"
 #include "Characters/BaseCharacter/BaseCharacter.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 // Sets default values for this component's properties
 UMovementHandlerComponent::UMovementHandlerComponent()
 {
 	OwnerCharacter = Cast<ABaseCharacter>(GetOwner());
+
+	WalkSpeed = 600.f;
+	SprintSpeed = 900.f;
 }
 
 
@@ -16,40 +20,77 @@ void UMovementHandlerComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
+	if (OwnerCharacter != nullptr) OwnerCharacter->GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
 }
 
 void UMovementHandlerComponent::JumpCustom()
 {
-	OwnerCharacter->Jump();
+	if (OwnerCharacter != nullptr) OwnerCharacter->Jump();
 }
 
 void UMovementHandlerComponent::MoveForward(float Value)
 {
-	OwnerCharacter->AddMovementInput(OwnerCharacter->GetActorForwardVector(), Value);
+	if (OwnerCharacter != nullptr) OwnerCharacter->AddMovementInput(OwnerCharacter->GetActorForwardVector(), Value);
 }
 
 void UMovementHandlerComponent::MoveRight(float Value)
 {
-	OwnerCharacter->AddMovementInput(OwnerCharacter->GetActorRightVector(), Value);
+	if (OwnerCharacter != nullptr) OwnerCharacter->AddMovementInput(OwnerCharacter->GetActorRightVector(), Value);
 }
 
 void UMovementHandlerComponent::YawView(float Value)
 {
-	OwnerCharacter->AddControllerYawInput(Value);
+	if (OwnerCharacter != nullptr) OwnerCharacter->AddControllerYawInput(Value);
 }
 
 void UMovementHandlerComponent::PitchView(float Value)
 {
-	OwnerCharacter->AddControllerPitchInput(Value);
+	if (OwnerCharacter != nullptr) OwnerCharacter->AddControllerPitchInput(Value);
 }
 
 void UMovementHandlerComponent::CrouchStart()
 {
-	OwnerCharacter->Crouch();
+	if ( OwnerCharacter != nullptr ) OwnerCharacter->Crouch();
 }
 
 void UMovementHandlerComponent::CrouchEnd()
 {
-	OwnerCharacter->UnCrouch();
+	if (OwnerCharacter != nullptr) OwnerCharacter->UnCrouch();
 }
 
+void UMovementHandlerComponent::SprintStart()
+{
+	if (OwnerCharacter != nullptr)
+	{
+		OwnerCharacter->GetCharacterMovement()->MaxWalkSpeed = SprintSpeed;
+
+		SprintStartServer();
+	}
+}
+
+void UMovementHandlerComponent::SprintStop()
+{
+	if (OwnerCharacter != nullptr)
+	{
+		OwnerCharacter->GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
+
+		SprintStopServer();
+	}
+}
+
+void UMovementHandlerComponent::SprintStartServer_Implementation()
+{
+	if (OwnerCharacter != nullptr)
+	{
+		OwnerCharacter->GetCharacterMovement()->MaxWalkSpeed = SprintSpeed;
+
+	}
+}
+
+void UMovementHandlerComponent::SprintStopServer_Implementation()
+{
+	if (OwnerCharacter != nullptr)
+	{
+		OwnerCharacter->GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
+	}
+}

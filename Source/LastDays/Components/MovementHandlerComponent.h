@@ -22,6 +22,18 @@ protected:
 
 	class ABaseCharacter* OwnerCharacter;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+	float WalkSpeed;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+	float SprintSpeed;
+
+	UFUNCTION(Server, Reliable)
+	void SprintStartServer();
+
+	UFUNCTION(Server, Reliable)
+	void SprintStopServer();
+
 public:
 
 	UFUNCTION(BlueprintCallable, Category = "Movement")
@@ -38,4 +50,8 @@ public:
 	void CrouchStart();
 
 	void CrouchEnd();
+
+	void SprintStart();
+
+	void SprintStop();
 };

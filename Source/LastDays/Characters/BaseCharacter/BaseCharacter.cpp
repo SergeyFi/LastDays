@@ -50,5 +50,9 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAction("Crouch", IE_Pressed, MovementHandlerComponent, &UMovementHandlerComponent::CrouchStart);
 
 	PlayerInputComponent->BindAction("Crouch", IE_Released, MovementHandlerComponent, &UMovementHandlerComponent::CrouchEnd);
+
+	PlayerInputComponent->BindAction("Sprint", IE_Pressed, MovementHandlerComponent, &UMovementHandlerComponent::SprintStart);
+
+	PlayerInputComponent->BindAction("Sprint", IE_Released, MovementHandlerComponent, &UMovementHandlerComponent::SprintStop);
 }
 
