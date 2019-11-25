@@ -11,5 +11,16 @@ UCLASS()
 class LASTDAYS_API AHumanCharacter : public ABaseCharacter
 {
 	GENERATED_BODY()
+
+public:
+	AHumanCharacter();
+
+protected:
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
+	class USpringArmComponent* SpringArm;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
+	class UCameraComponent* Camera;
 	
 };
