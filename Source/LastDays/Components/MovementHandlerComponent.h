@@ -19,5 +19,23 @@ public:
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
-		
+
+	class ABaseCharacter* OwnerCharacter;
+
+public:
+
+	UFUNCTION(BlueprintCallable, Category = "Movement")
+	void JumpCustom();
+
+	void MoveForward(float Value);
+	
+	void MoveRight(float Value);
+
+	void YawView(float Value);
+
+	void PitchView(float Value);
+
+	void CrouchStart();
+
+	void CrouchEnd();
 };

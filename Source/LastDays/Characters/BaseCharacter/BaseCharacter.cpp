@@ -2,12 +2,19 @@
 
 
 #include "BaseCharacter.h"
+#include "Components/InputComponent.h"
+#include "Components/MovementHandlerComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 // Sets default values
 ABaseCharacter::ABaseCharacter()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	MovementHandlerComponent = CreateDefaultSubobject<UMovementHandlerComponent>(TEXT("MovementHanlder"));
+
+	GetCharacterMovement()->GetNavAgentPropertiesRef().bCanCrouch = true;
 
 }
 
@@ -30,5 +37,18 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+	PlayerInputComponent->BindAction("Jump", IE_Pressed, MovementHandlerComponent, &UMovementHandlerComponent::JumpCustom);
+
+	PlayerInputComponent->BindAxis("MoveForward", MovementHandlerComponent, &UMovementHandlerComponent::MoveForward);
+
+	PlayerInputComponent->BindAxis("MoveRight", MovementHandlerComponent, &UMovementHandlerComponent::MoveRight);
+
+	PlayerInputComponent->BindAxis("YawView", MovementHandlerComponent, &UMovementHandlerComponent::YawView);
+
+	PlayerInputComponent->BindAxis("PitchView", MovementHandlerComponent, &UMovementHandlerComponent::PitchView);
+
+	PlayerInputComponent->BindAction("Crouch", IE_Pressed, MovementHandlerComponent, &UMovementHandlerComponent::CrouchStart);
+
+	PlayerInputComponent->BindAction("Crouch", IE_Released, MovementHandlerComponent, &UMovementHandlerComponent::CrouchEnd);
 }
 

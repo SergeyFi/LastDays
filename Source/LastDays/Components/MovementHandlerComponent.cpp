@@ -2,15 +2,12 @@
 
 
 #include "MovementHandlerComponent.h"
+#include "Characters/BaseCharacter/BaseCharacter.h"
 
 // Sets default values for this component's properties
 UMovementHandlerComponent::UMovementHandlerComponent()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
-
-	// ...
+	OwnerCharacter = Cast<ABaseCharacter>(GetOwner());
 }
 
 
@@ -19,16 +16,40 @@ void UMovementHandlerComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ...
-	
 }
 
-
-// Called every frame
-void UMovementHandlerComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UMovementHandlerComponent::JumpCustom()
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	OwnerCharacter->Jump();
+}
 
-	// ...
+void UMovementHandlerComponent::MoveForward(float Value)
+{
+	OwnerCharacter->AddMovementInput(OwnerCharacter->GetActorForwardVector(), Value);
+}
+
+void UMovementHandlerComponent::MoveRight(float Value)
+{
+	OwnerCharacter->AddMovementInput(OwnerCharacter->GetActorRightVector(), Value);
+}
+
+void UMovementHandlerComponent::YawView(float Value)
+{
+	OwnerCharacter->AddControllerYawInput(Value);
+}
+
+void UMovementHandlerComponent::PitchView(float Value)
+{
+	OwnerCharacter->AddControllerPitchInput(Value);
+}
+
+void UMovementHandlerComponent::CrouchStart()
+{
+	OwnerCharacter->Crouch();
+}
+
+void UMovementHandlerComponent::CrouchEnd()
+{
+	OwnerCharacter->UnCrouch();
 }
 
