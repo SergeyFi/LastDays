@@ -4,6 +4,7 @@
 #include "MovementHandlerComponent.h"
 #include "Characters/BaseCharacter/BaseCharacter.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Components/StaminaComponent.h"
 
 // Sets default values for this component's properties
 UMovementHandlerComponent::UMovementHandlerComponent()
@@ -12,6 +13,7 @@ UMovementHandlerComponent::UMovementHandlerComponent()
 
 	WalkSpeed = 600.f;
 	SprintSpeed = 900.f;
+	bCanSprint = true;
 }
 
 
@@ -60,7 +62,7 @@ void UMovementHandlerComponent::CrouchEnd()
 
 void UMovementHandlerComponent::SprintStart()
 {
-	if (OwnerCharacter != nullptr)
+	if (OwnerCharacter != nullptr && bCanSprint)
 	{
 		OwnerCharacter->GetCharacterMovement()->MaxWalkSpeed = SprintSpeed;
 
@@ -80,10 +82,9 @@ void UMovementHandlerComponent::SprintStop()
 
 void UMovementHandlerComponent::SprintStartServer_Implementation()
 {
-	if (OwnerCharacter != nullptr)
+	if (OwnerCharacter != nullptr && bCanSprint)
 	{
 		OwnerCharacter->GetCharacterMovement()->MaxWalkSpeed = SprintSpeed;
-
 	}
 }
 
