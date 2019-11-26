@@ -5,6 +5,7 @@
 #include "Components/InputComponent.h"
 #include "Components/MovementHandlerComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Components/StaminaComponent.h"
 
 // Sets default values
 ABaseCharacter::ABaseCharacter()
@@ -15,6 +16,8 @@ ABaseCharacter::ABaseCharacter()
 	MovementHandlerComponent = CreateDefaultSubobject<UMovementHandlerComponent>(TEXT("MovementHanlder"));
 
 	GetCharacterMovement()->GetNavAgentPropertiesRef().bCanCrouch = true;
+
+	StaminaComponent = CreateDefaultSubobject<UStaminaComponent>(TEXT("StaminaComponent"));
 
 }
 
