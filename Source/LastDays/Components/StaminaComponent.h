@@ -20,5 +20,9 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-		
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
+	float StaminaMax;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Properties")
+	float StaminaCurrent;
 };

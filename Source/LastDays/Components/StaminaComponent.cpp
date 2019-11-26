@@ -6,7 +6,8 @@
 // Sets default values for this component's properties
 UStaminaComponent::UStaminaComponent()
 {
-
+	StaminaMax = 100.f;
+	StaminaCurrent = StaminaMax;
 }
 
 
@@ -17,5 +18,4 @@ void UStaminaComponent::BeginPlay()
 
 	
 }
-
 
