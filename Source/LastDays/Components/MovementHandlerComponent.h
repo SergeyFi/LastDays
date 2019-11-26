@@ -34,6 +34,9 @@ protected:
 	UFUNCTION(Server, Reliable)
 	void SprintStopServer();
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Properties")
+	bool bCanSprint;
+
 public:
 
 	UFUNCTION(BlueprintCallable, Category = "Movement")
