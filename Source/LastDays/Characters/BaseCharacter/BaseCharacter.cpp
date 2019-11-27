@@ -56,7 +56,7 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 	PlayerInputComponent->BindAction("Sprint", IE_Pressed, MovementHandlerComponent, &UMovementHandlerComponent::SprintStartServer);
 
-	PlayerInputComponent->BindAction("Sprint", IE_Released, MovementHandlerComponent, &UMovementHandlerComponent::SprintStopServer);
+	PlayerInputComponent->BindAction("Sprint", IE_Released, MovementHandlerComponent, &UMovementHandlerComponent::SprintStopServerClient);
 }
 
 UMovementHandlerComponent* ABaseCharacter::GetMovementHandler()

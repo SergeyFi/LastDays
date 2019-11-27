@@ -59,7 +59,7 @@ public:
 	void SprintStartServer();
 
 	UFUNCTION(Server, Reliable)
-	void SprintStopServer();
+	void SprintStopServerClient();
 
 	UPROPERTY(BlueprintAssignable, Category = "Movement")
 	FActionDelegate OnJump;

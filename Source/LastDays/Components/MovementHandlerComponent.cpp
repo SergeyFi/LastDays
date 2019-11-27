@@ -93,7 +93,7 @@ void UMovementHandlerComponent::SprintStartServer_Implementation()
 	}
 }
 
-void UMovementHandlerComponent::SprintStopServer_Implementation()
+void UMovementHandlerComponent::SprintStopServerClient_Implementation()
 {
 	if (OwnerCharacter != nullptr)
 	{

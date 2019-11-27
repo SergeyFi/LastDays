@@ -14,8 +14,10 @@ UStaminaComponent::UStaminaComponent()
 
 	StaminaMax = 100.f;
 	StaminaCurrent = StaminaMax;
+	SprintWastePeriod = 0.5f;
+	SprintStaminaCost = 4.f;
 	JumpStaminaCost = 10.f;
-	StaminaRegenerationRate = 10.f;
+	StaminaRegenerationRate = 2.f;
 	bCanJump = true;
 	bCanSprint = true;
 
@@ -30,11 +32,11 @@ void UStaminaComponent::BeginPlay()
 
 	if (OwnerCharacter != nullptr)
 	{
-		OwnerCharacter->GetMovementHandler()->OnJump.AddDynamic(this, &UStaminaComponent::DecreaseStaminaJump);
+		OwnerCharacter->GetMovementHandler()->OnJump.AddDynamic(this, &UStaminaComponent::DecreaseStaminaJumpServerClient);
 
-		OwnerCharacter->GetMovementHandler()->OnSprint.AddDynamic(this, &UStaminaComponent::StaminaWasteStartServer);
+		OwnerCharacter->GetMovementHandler()->OnSprint.AddDynamic(this, &UStaminaComponent::StaminaWasteStartServerClient);
 
-		OwnerCharacter->GetMovementHandler()->OnStopSprint.AddDynamic(this, &UStaminaComponent::StaminaWasteStopServer);
+		OwnerCharacter->GetMovementHandler()->OnStopSprint.AddDynamic(this, &UStaminaComponent::StaminaWasteStopServerClient);
 	}
 }
 
@@ -42,11 +44,12 @@ void UStaminaComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	RegenerateStamina(DeltaTime);
+	RegenerateStaminaServer(DeltaTime);
 	RegenerateStaminaClient(DeltaTime);
 }
 
-void UStaminaComponent::DecreaseStaminaJump()
+
+void UStaminaComponent::DecreaseStaminaJumpServerClient_Implementation()
 {
 	if (StaminaCurrent >= JumpStaminaCost)
 	{
@@ -57,11 +60,10 @@ void UStaminaComponent::DecreaseStaminaJump()
 		bCanJump = false;
 	}
 
-	DecreaseStaminaJumpServer();
+	DecreaseStaminaJumpClient();
 }
 
-
-void UStaminaComponent::DecreaseStaminaJumpServer_Implementation()
+void UStaminaComponent::DecreaseStaminaJumpClient_Implementation()
 {
 	if (StaminaCurrent >= JumpStaminaCost)
 	{
@@ -71,7 +73,6 @@ void UStaminaComponent::DecreaseStaminaJumpServer_Implementation()
 	{
 		bCanJump = false;
 	}
-
 }
 
 void UStaminaComponent::StaminaWasteStartClient_Implementation()
@@ -94,7 +95,7 @@ void UStaminaComponent::StaminaWasteStopClient_Implementation()
 	}
 }
 
-void UStaminaComponent::StaminaWasteStartServer_Implementation()
+void UStaminaComponent::StaminaWasteStartServerClient_Implementation()
 {
 	UWorld* World = GetWorld();
 
@@ -106,7 +107,7 @@ void UStaminaComponent::StaminaWasteStartServer_Implementation()
 	StaminaWasteStartClient();
 }
 
-void UStaminaComponent::StaminaWasteStopServer_Implementation()
+void UStaminaComponent::StaminaWasteStopServerClient_Implementation()
 {
 	UWorld* World = GetWorld();
 
@@ -118,45 +119,46 @@ void UStaminaComponent::StaminaWasteStopServer_Implementation()
 	StaminaWasteStopClient();
 }
 
-void UStaminaComponent::SprintWasteClient_Implementation()
-{
-	if (StaminaCurrent > 0.f)
-	{
-		StaminaCurrent -= SprintStaminaCost;
-	}
-	else
-	{
-		StaminaCurrent = 0.f;
-		bCanSprint = false;
-
-		if (OwnerCharacter != nullptr) OwnerCharacter->GetMovementHandler()->SprintStopServer();
-
-		StaminaWasteStopServer();
-	}
-}
 
 void UStaminaComponent::SprintWasteServer_Implementation()
 {
-	if (StaminaCurrent > 0.f)
-	{
-		StaminaCurrent -= SprintStaminaCost;
-	}
-	else
+	StaminaCurrent -= SprintStaminaCost;
+
+	if (StaminaCurrent <= 0)
 	{
 		StaminaCurrent = 0.f;
 		bCanSprint = false;
 
-		if (OwnerCharacter != nullptr) OwnerCharacter->GetMovementHandler()->SprintStopServer();
+		if (OwnerCharacter != nullptr) OwnerCharacter->GetMovementHandler()->SprintStopServerClient();
 
-		StaminaWasteStopServer();
+		StaminaWasteStopServerClient();
 	}
 }
 
-void UStaminaComponent::RegenerateStamina_Implementation(float DeltaTime)
+void UStaminaComponent::SprintWasteClient_Implementation()
+{
+	StaminaCurrent -= SprintStaminaCost;
+
+	if (StaminaCurrent <= 0)
+	{
+		StaminaCurrent = 0.f;
+		bCanSprint = false;
+
+		if (OwnerCharacter != nullptr) OwnerCharacter->GetMovementHandler()->SprintStopServerClient();
+
+		StaminaWasteStopServerClient();
+	}
+}
+
+
+
+void UStaminaComponent::RegenerateStaminaServer_Implementation(float DeltaTime)
 {
 	StaminaCurrent += StaminaRegenerationRate * DeltaTime;
 
 	if (StaminaCurrent > StaminaMax) StaminaCurrent = 100.f;
+
+	if (StaminaCurrent >= JumpStaminaCost) bCanJump = true;
 }
 
 void UStaminaComponent::RegenerateStaminaClient_Implementation(float DeltaTime)
@@ -164,4 +166,6 @@ void UStaminaComponent::RegenerateStaminaClient_Implementation(float DeltaTime)
 	StaminaCurrent += StaminaRegenerationRate * DeltaTime;
 
 	if (StaminaCurrent > StaminaMax) StaminaCurrent = 100.f;
+
+	if (StaminaCurrent >= JumpStaminaCost) bCanJump = true;
 }

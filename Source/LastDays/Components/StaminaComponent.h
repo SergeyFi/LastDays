@@ -42,11 +42,11 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
 	float SprintStaminaCost;
 
-	UFUNCTION()
-	void DecreaseStaminaJump();
+	UFUNCTION(Client, Reliable)
+	void DecreaseStaminaJumpClient();
 
 	UFUNCTION(Server, Reliable)
-	void DecreaseStaminaJumpServer();
+	void DecreaseStaminaJumpServerClient();
 
 	UFUNCTION(Client, Reliable)
 	void SprintWasteClient();
@@ -61,13 +61,13 @@ protected:
 	void StaminaWasteStopClient();
 
 	UFUNCTION(Server, Reliable)
-	void StaminaWasteStartServer();
+	void StaminaWasteStartServerClient();
 
 	UFUNCTION(Server, Reliable)
-	void StaminaWasteStopServer();
+	void StaminaWasteStopServerClient();
 
 	UFUNCTION(Server, Reliable)
-	void RegenerateStamina(float DeltaTime);
+	void RegenerateStaminaServer(float DeltaTime);
 
 	UFUNCTION(Client, Reliable)
 	void RegenerateStaminaClient(float DeltaTime);
