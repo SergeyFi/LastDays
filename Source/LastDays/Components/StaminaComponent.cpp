@@ -116,6 +116,10 @@ void UStaminaComponent::SprintWasteClient_Implementation()
 	else
 	{
 		StaminaCurrent = 0.f;
+		bCanSprint = false;
+
+		if (OwnerCharacter != nullptr) OwnerCharacter->GetMovementHandler()->SprintStopServer();
+
 		StaminaWasteStopServer();
 	}
 }
@@ -129,6 +133,10 @@ void UStaminaComponent::SprintWasteServer_Implementation()
 	else
 	{
 		StaminaCurrent = 0.f;
+		bCanSprint = false;
+
+		if (OwnerCharacter != nullptr) OwnerCharacter->GetMovementHandler()->SprintStopServer();
+
 		StaminaWasteStopServer();
 	}
 }
