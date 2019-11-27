@@ -6,6 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "MovementHandlerComponent.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FActionDelegate);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class LASTDAYS_API UMovementHandlerComponent : public UActorComponent
@@ -28,19 +29,19 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 	float SprintSpeed;
 
-	UFUNCTION(Server, Reliable)
-	void SprintStartServer();
+	UFUNCTION(Client, Reliable)
+	void SprintStartClient();
 
-	UFUNCTION(Server, Reliable)
-	void SprintStopServer();
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Properties")
-	bool bCanSprint;
+	UFUNCTION(Client, Reliable)
+	void SprintStopClient();
 
 public:
 
-	UFUNCTION(BlueprintCallable, Category = "Movement")
-	void JumpCustom();
+	UFUNCTION(Server, Reliable)
+	void JumpCustomServer();
+
+	UFUNCTION(Client, Reliable)
+	void JumpCustomClient();
 
 	void MoveForward(float Value);
 	
@@ -54,7 +55,18 @@ public:
 
 	void CrouchEnd();
 
-	void SprintStart();
+	UFUNCTION(Server, Reliable)
+	void SprintStartServer();
 
-	void SprintStop();
+	UFUNCTION(Server, Reliable)
+	void SprintStopServer();
+
+	UPROPERTY(BlueprintAssignable, Category = "Movement")
+	FActionDelegate OnJump;
+
+	UPROPERTY(BlueprintAssignable, Category = "Movement")
+	FActionDelegate OnSprint;
+
+	UPROPERTY(BlueprintAssignable, Category = "Movement")
+	FActionDelegate OnStopSprint;
 };

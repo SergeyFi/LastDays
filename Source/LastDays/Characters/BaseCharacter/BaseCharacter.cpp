@@ -40,7 +40,7 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	PlayerInputComponent->BindAction("Jump", IE_Pressed, MovementHandlerComponent, &UMovementHandlerComponent::JumpCustom);
+	PlayerInputComponent->BindAction("Jump", IE_Pressed, MovementHandlerComponent, &UMovementHandlerComponent::JumpCustomServer);
 
 	PlayerInputComponent->BindAxis("MoveForward", MovementHandlerComponent, &UMovementHandlerComponent::MoveForward);
 
@@ -54,8 +54,18 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 	PlayerInputComponent->BindAction("Crouch", IE_Released, MovementHandlerComponent, &UMovementHandlerComponent::CrouchEnd);
 
-	PlayerInputComponent->BindAction("Sprint", IE_Pressed, MovementHandlerComponent, &UMovementHandlerComponent::SprintStart);
+	PlayerInputComponent->BindAction("Sprint", IE_Pressed, MovementHandlerComponent, &UMovementHandlerComponent::SprintStartServer);
 
-	PlayerInputComponent->BindAction("Sprint", IE_Released, MovementHandlerComponent, &UMovementHandlerComponent::SprintStop);
+	PlayerInputComponent->BindAction("Sprint", IE_Released, MovementHandlerComponent, &UMovementHandlerComponent::SprintStopServer);
+}
+
+UMovementHandlerComponent* ABaseCharacter::GetMovementHandler()
+{
+	return MovementHandlerComponent;
+}
+
+UStaminaComponent* ABaseCharacter::GetStaminaComponent()
+{
+	return StaminaComponent;
 }
 

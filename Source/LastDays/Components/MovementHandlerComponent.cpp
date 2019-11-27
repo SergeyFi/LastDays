@@ -13,7 +13,7 @@ UMovementHandlerComponent::UMovementHandlerComponent()
 
 	WalkSpeed = 600.f;
 	SprintSpeed = 900.f;
-	bCanSprint = true;
+
 }
 
 
@@ -23,11 +23,32 @@ void UMovementHandlerComponent::BeginPlay()
 	Super::BeginPlay();
 
 	if (OwnerCharacter != nullptr) OwnerCharacter->GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
+
 }
 
-void UMovementHandlerComponent::JumpCustom()
+void UMovementHandlerComponent::JumpCustomServer_Implementation()
 {
-	if (OwnerCharacter != nullptr) OwnerCharacter->Jump();
+	if (OwnerCharacter != nullptr && OwnerCharacter->GetCharacterMovement()->IsWalking())
+	{
+		if (OwnerCharacter->GetStaminaComponent()->bCanJump)
+		{
+			OwnerCharacter->Jump();
+
+			JumpCustomClient();
+		}
+	}
+}
+
+void UMovementHandlerComponent::JumpCustomClient_Implementation()
+{
+	if (OwnerCharacter != nullptr && OwnerCharacter->GetCharacterMovement()->IsWalking())
+	{
+		OnJump.Broadcast();
+		if (OwnerCharacter->GetStaminaComponent()->bCanJump)
+		{
+			OwnerCharacter->Jump();
+		}
+	}
 }
 
 void UMovementHandlerComponent::MoveForward(float Value)
@@ -60,31 +81,15 @@ void UMovementHandlerComponent::CrouchEnd()
 	if (OwnerCharacter != nullptr) OwnerCharacter->UnCrouch();
 }
 
-void UMovementHandlerComponent::SprintStart()
-{
-	if (OwnerCharacter != nullptr && bCanSprint)
-	{
-		OwnerCharacter->GetCharacterMovement()->MaxWalkSpeed = SprintSpeed;
-
-		SprintStartServer();
-	}
-}
-
-void UMovementHandlerComponent::SprintStop()
-{
-	if (OwnerCharacter != nullptr)
-	{
-		OwnerCharacter->GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
-
-		SprintStopServer();
-	}
-}
-
 void UMovementHandlerComponent::SprintStartServer_Implementation()
 {
-	if (OwnerCharacter != nullptr && bCanSprint)
+	if (OwnerCharacter != nullptr && !OwnerCharacter->GetMovementComponent()->Velocity.IsZero())
 	{
 		OwnerCharacter->GetCharacterMovement()->MaxWalkSpeed = SprintSpeed;
+
+		OnSprint.Broadcast();
+
+		SprintStartClient();
 	}
 }
 
@@ -93,5 +98,29 @@ void UMovementHandlerComponent::SprintStopServer_Implementation()
 	if (OwnerCharacter != nullptr)
 	{
 		OwnerCharacter->GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
+
+		OnStopSprint.Broadcast();
+
+		SprintStopClient();
+	}
+}
+
+void UMovementHandlerComponent::SprintStartClient_Implementation()
+{
+	if (OwnerCharacter != nullptr && !OwnerCharacter->GetMovementComponent()->Velocity.IsZero())
+	{
+		OwnerCharacter->GetCharacterMovement()->MaxWalkSpeed = SprintSpeed;
+
+		//OnSprint.Broadcast();
+	}
+}
+
+void UMovementHandlerComponent::SprintStopClient_Implementation()
+{
+	if (OwnerCharacter != nullptr)
+	{
+		OwnerCharacter->GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
+
+		//OnStopSprint.Broadcast();
 	}
 }
