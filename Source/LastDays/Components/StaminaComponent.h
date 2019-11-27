@@ -25,9 +25,14 @@ protected:
 	float SprintWastePeriod;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
-	float StaminaRegenerationRate;
+	float StaminaRegenerationPeriod;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
+	float StaminaRegenerationAmount;
 
 	FTimerHandle SprintTimer;
+
+	FTimerHandle StaminaRegenerationTimer;
 
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
@@ -67,10 +72,10 @@ protected:
 	void StaminaWasteStopServerClient();
 
 	UFUNCTION(Server, Reliable)
-	void RegenerateStaminaServer(float DeltaTime);
+	void RegenerateStaminaServer();
 
 	UFUNCTION(Client, Reliable)
-	void RegenerateStaminaClient(float DeltaTime);
+	void RegenerateStaminaClient(float Stamina);
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
