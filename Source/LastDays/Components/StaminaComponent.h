@@ -24,7 +24,11 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
 	float SprintWastePeriod;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
+	float StaminaRegenerationRate;
+
 	FTimerHandle SprintTimer;
+
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
 	float StaminaMax;
@@ -62,10 +66,19 @@ protected:
 	UFUNCTION(Server, Reliable)
 	void StaminaWasteStopServer();
 
+	UFUNCTION(Server, Reliable)
+	void RegenerateStamina(float DeltaTime);
+
+	UFUNCTION(Client, Reliable)
+	void RegenerateStaminaClient(float DeltaTime);
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
 	bool bCanJump;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Properties")
 	bool bCanSprint;
+
+	// Called every frame
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 };

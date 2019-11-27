@@ -10,9 +10,12 @@
 // Sets default values for this component's properties
 UStaminaComponent::UStaminaComponent()
 {
+	PrimaryComponentTick.bCanEverTick = true;
+
 	StaminaMax = 100.f;
 	StaminaCurrent = StaminaMax;
 	JumpStaminaCost = 10.f;
+	StaminaRegenerationRate = 10.f;
 	bCanJump = true;
 	bCanSprint = true;
 
@@ -33,6 +36,14 @@ void UStaminaComponent::BeginPlay()
 
 		OwnerCharacter->GetMovementHandler()->OnStopSprint.AddDynamic(this, &UStaminaComponent::StaminaWasteStopServer);
 	}
+}
+
+void UStaminaComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+{
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
+	RegenerateStamina(DeltaTime);
+	RegenerateStaminaClient(DeltaTime);
 }
 
 void UStaminaComponent::DecreaseStaminaJump()
@@ -139,4 +150,18 @@ void UStaminaComponent::SprintWasteServer_Implementation()
 
 		StaminaWasteStopServer();
 	}
+}
+
+void UStaminaComponent::RegenerateStamina_Implementation(float DeltaTime)
+{
+	StaminaCurrent += StaminaRegenerationRate * DeltaTime;
+
+	if (StaminaCurrent > StaminaMax) StaminaCurrent = 100.f;
+}
+
+void UStaminaComponent::RegenerateStaminaClient_Implementation(float DeltaTime)
+{
+	StaminaCurrent += StaminaRegenerationRate * DeltaTime;
+
+	if (StaminaCurrent > StaminaMax) StaminaCurrent = 100.f;
 }
