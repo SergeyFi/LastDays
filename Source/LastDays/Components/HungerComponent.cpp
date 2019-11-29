@@ -63,7 +63,7 @@ void UHungerComponent::RemoveStarvationThirst_Implementation(float StarvationRem
 
 	if (Thirst <= 0.f)
 	{
-		Starvation = 0.f;
+		Thirst = 0.f;
 	}
 
 	UpdateStarvationThirstClient(Starvation, Thirst);
