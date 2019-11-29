@@ -22,7 +22,7 @@ void UHungerComponent::StartStarvationThirstTimer_Implementation()
 {
 	UWorld* World = GetWorld();
 
-	if (World != nullptr) World->GetTimerManager().SetTimer(StarvationThirstWasteTimer, this, &UHungerComponent::StartStarvationThirstTimer, 1.f, true, 0.f);
+	if (World != nullptr) World->GetTimerManager().SetTimer(StarvationThirstWasteTimer, this, &UHungerComponent::StartStarvationThirstTimer, StarvationThirstPeriod, true, 0.f);
 }
 
 void UHungerComponent::StarvationThirstWaste_Implementation()

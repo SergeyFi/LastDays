@@ -25,6 +25,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Properties")
 	float Thirst;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
+	float StarvationThirstPeriod;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
 	float StarvationWasteIdle;
