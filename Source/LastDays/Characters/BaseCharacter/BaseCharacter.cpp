@@ -6,6 +6,7 @@
 #include "Components/MovementHandlerComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/StaminaComponent.h"
+#include "Components/HungerComponent.h"
 
 // Sets default values
 ABaseCharacter::ABaseCharacter()
@@ -13,11 +14,13 @@ ABaseCharacter::ABaseCharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	MovementHandlerComponent = CreateDefaultSubobject<UMovementHandlerComponent>(TEXT("MovementHanlder"));
+	MovementHandlerComponent = CreateDefaultSubobject<UMovementHandlerComponent>(TEXT("MovementHandler"));
 
 	GetCharacterMovement()->GetNavAgentPropertiesRef().bCanCrouch = true;
 
 	StaminaComponent = CreateDefaultSubobject<UStaminaComponent>(TEXT("StaminaComponent"));
+
+	HungerComponent = CreateDefaultSubobject<UHungerComponent>(TEXT("HungerComponent"));
 
 }
 
