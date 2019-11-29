@@ -4,11 +4,13 @@
 #include "HungerComponent.h"
 #include "Engine/World.h"
 #include "TimerManager.h"
+#include "Characters/BaseCharacter/BaseCharacter.h"
+#include "Components/MovementHandlerComponent.h"
 
 // Sets default values for this component's properties
 UHungerComponent::UHungerComponent()
 {
-
+	OwnerCharacter = Cast<ABaseCharacter>(GetOwner());
 }
 
 
@@ -16,6 +18,8 @@ UHungerComponent::UHungerComponent()
 void UHungerComponent::BeginPlay()
 {
 	Super::BeginPlay();
+
+	StartStarvationThirstTimer();
 }
 
 void UHungerComponent::StartStarvationThirstTimer_Implementation()
@@ -27,6 +31,38 @@ void UHungerComponent::StartStarvationThirstTimer_Implementation()
 
 void UHungerComponent::StarvationThirstWaste_Implementation()
 {
+	if (OwnerCharacter != nullptr)
+	{
+		if (OwnerCharacter->GetMovementHandler()->IsIdle())
+		{
+			RemoveStarvationThirst(StarvationWasteIdle, ThirstWasteIdle);
+		}
+		else if (OwnerCharacter->GetMovementHandler()->IsWalk())
+		{
+			RemoveStarvationThirst(StarvationWasteWalk, ThirstWasteIWalk);
+		}
+		else if (OwnerCharacter->GetMovementHandler()->IsSprint())
+		{
+			RemoveStarvationThirst(StarvationWasteSprint, ThirstWasteSprint);
+		}
+	}
+}
+
+void UHungerComponent::RemoveStarvationThirst_Implementation(float StarvationRemove, float ThirstRemove)
+{
+	Starvation -= StarvationRemove;
+	Thirst -= ThirstRemove;
+
+	if (Starvation <= 0.f)
+	{
+		Starvation = 0.f;
+	}
+
+	if (Thirst <= 0.f)
+	{
+		Starvation = 0.f;
+	}
+
 	UpdateStarvationThirstClient(Starvation, Thirst);
 }
 

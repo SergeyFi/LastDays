@@ -49,11 +49,16 @@ protected:
 
 	FTimerHandle StarvationThirstWasteTimer;
 
+	class ABaseCharacter* OwnerCharacter;
+
 	UFUNCTION(Server, Reliable)
 	void StartStarvationThirstTimer();
 
 	UFUNCTION(Server, Reliable)
 	void StarvationThirstWaste();
+
+	UFUNCTION(Server, Reliable)
+	void RemoveStarvationThirst(float StarvationRemove, float ThirstRemove);
 
 	UFUNCTION(Client, Reliable)
 	void UpdateStarvationThirstClient(float StarvationServer, float ThirstServer);
