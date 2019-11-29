@@ -17,6 +17,7 @@ ABaseCharacter::ABaseCharacter()
 	MovementHandlerComponent = CreateDefaultSubobject<UMovementHandlerComponent>(TEXT("MovementHandler"));
 
 	GetCharacterMovement()->GetNavAgentPropertiesRef().bCanCrouch = true;
+	GetCharacterMovement()->MaxStepHeight = 60.f;
 
 	StaminaComponent = CreateDefaultSubobject<UStaminaComponent>(TEXT("StaminaComponent"));
 
