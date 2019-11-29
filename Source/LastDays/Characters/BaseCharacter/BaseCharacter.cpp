@@ -68,4 +68,3 @@ UStaminaComponent* ABaseCharacter::GetStaminaComponent()
 {
 	return StaminaComponent;
 }
-
