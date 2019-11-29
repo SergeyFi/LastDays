@@ -2,15 +2,13 @@
 
 
 #include "HungerComponent.h"
+#include "Engine/World.h"
+#include "TimerManager.h"
 
 // Sets default values for this component's properties
 UHungerComponent::UHungerComponent()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
 
-	// ...
 }
 
 
@@ -18,17 +16,22 @@ UHungerComponent::UHungerComponent()
 void UHungerComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
-	// ...
-	
 }
 
-
-// Called every frame
-void UHungerComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UHungerComponent::StartStarvationThirstTimer_Implementation()
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	UWorld* World = GetWorld();
 
-	// ...
+	if (World != nullptr) World->GetTimerManager().SetTimer(StarvationThirstWasteTimer, this, &UHungerComponent::StartStarvationThirstTimer, 1.f, true, 0.f);
 }
 
+void UHungerComponent::StarvationThirstWaste_Implementation()
+{
+	UpdateStarvationThirstClient(Starvation, Thirst);
+}
+
+void UHungerComponent::UpdateStarvationThirstClient_Implementation(float StarvationServer, float ThirstServer)
+{
+	Starvation = StarvationServer;
+	Thirst = ThirstServer;
+}
