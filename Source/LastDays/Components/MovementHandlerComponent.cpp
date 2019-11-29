@@ -81,6 +81,7 @@ void UMovementHandlerComponent::CrouchEnd()
 	if (OwnerCharacter != nullptr) OwnerCharacter->UnCrouch();
 }
 
+
 void UMovementHandlerComponent::SprintStartServer_Implementation()
 {
 	if (OwnerCharacter != nullptr && !OwnerCharacter->GetMovementComponent()->Velocity.IsZero())
