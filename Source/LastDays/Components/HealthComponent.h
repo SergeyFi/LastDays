@@ -7,6 +7,8 @@
 #include "HealthComponent.generated.h"
 
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDeathDelegate);
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class LASTDAYS_API UHealthComponent : public UActorComponent
 {
@@ -20,9 +22,23 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-public:	
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Properties")
+	float HealthCurrent;
 
-		
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
+	float HealthMax;
+
+	UFUNCTION(Client, Reliable)
+	void UpdateHealthClient(float Health);
+
+	UPROPERTY(BlueprintAssignable, Category = "Health")
+	FDeathDelegate OnDeath;
+
+
+
+public:
+
+	UFUNCTION(Server, Reliable)
+	void RemoveHealth(float Damage);
+
 };
