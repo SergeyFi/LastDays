@@ -11,6 +11,9 @@
 UHungerComponent::UHungerComponent()
 {
 	OwnerCharacter = Cast<ABaseCharacter>(GetOwner());
+
+	Thirst = 100.f;
+	Starvation = 100.f;
 }
 
 
@@ -26,7 +29,7 @@ void UHungerComponent::StartStarvationThirstTimer_Implementation()
 {
 	UWorld* World = GetWorld();
 
-	if (World != nullptr) World->GetTimerManager().SetTimer(StarvationThirstWasteTimer, this, &UHungerComponent::StartStarvationThirstTimer, StarvationThirstPeriod, true, 0.f);
+	if (World != nullptr) World->GetTimerManager().SetTimer(StarvationThirstWasteTimer, this, &UHungerComponent::StarvationThirstWaste, StarvationThirstPeriod, true, 0.f);
 }
 
 void UHungerComponent::StarvationThirstWaste_Implementation()

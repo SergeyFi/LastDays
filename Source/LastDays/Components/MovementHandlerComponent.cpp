@@ -137,7 +137,7 @@ float UMovementHandlerComponent::GetCurrentSpeed()
 
 bool UMovementHandlerComponent::IsIdle()
 {
-	if (GetCurrentSpeed() == 0.f)
+	if (GetCurrentSpeed() == 0.f && OwnerCharacter->GetCharacterMovement()->IsWalking())
 	{
 		return true;
 	}
@@ -146,7 +146,7 @@ bool UMovementHandlerComponent::IsIdle()
 
 bool UMovementHandlerComponent::IsWalk()
 {
-	if ((int32)GetCurrentSpeed() == (int32)WalkSpeed)
+	if ((int32)GetCurrentSpeed() > 0 && (int32)GetCurrentSpeed() <= (int32)WalkSpeed && OwnerCharacter->GetCharacterMovement()->IsWalking())
 	{
 		return true;
 	}
@@ -156,7 +156,7 @@ bool UMovementHandlerComponent::IsWalk()
 
 bool UMovementHandlerComponent::IsSprint()
 {
-	if ((int32)GetCurrentSpeed() == (int32)SprintSpeed)
+	if ((int32)GetCurrentSpeed() > (int32)WalkSpeed && OwnerCharacter->GetCharacterMovement()->IsWalking())
 	{
 		return true;
 	}
