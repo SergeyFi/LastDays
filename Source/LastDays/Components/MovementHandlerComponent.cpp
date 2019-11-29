@@ -81,7 +81,6 @@ void UMovementHandlerComponent::CrouchEnd()
 	if (OwnerCharacter != nullptr) OwnerCharacter->UnCrouch();
 }
 
-
 void UMovementHandlerComponent::SprintStartServer_Implementation()
 {
 	if (OwnerCharacter != nullptr && !OwnerCharacter->GetMovementComponent()->Velocity.IsZero())
@@ -124,4 +123,43 @@ void UMovementHandlerComponent::SprintStopClient_Implementation()
 
 		//OnStopSprint.Broadcast();
 	}
+}
+
+float UMovementHandlerComponent::GetCurrentSpeed()
+{
+	if (OwnerCharacter != nullptr)
+	{
+		return OwnerCharacter->GetVelocity().Size();;
+	}
+
+	else return 0.f;
+}
+
+bool UMovementHandlerComponent::IsIdle()
+{
+	if (GetCurrentSpeed() == 0.f)
+	{
+		return true;
+	}
+	else return false;
+}
+
+bool UMovementHandlerComponent::IsWalk()
+{
+	if ((int32)GetCurrentSpeed() == (int32)WalkSpeed)
+	{
+		return true;
+	}
+
+	else return false;
+}
+
+bool UMovementHandlerComponent::IsSprint()
+{
+	if ((int32)GetCurrentSpeed() == (int32)SprintSpeed)
+	{
+		return true;
+	}
+
+	else return false;
 }

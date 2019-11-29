@@ -69,4 +69,16 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category = "Movement")
 	FActionDelegate OnStopSprint;
+
+	UFUNCTION(BlueprintPure, Category = "Movement")
+	float GetCurrentSpeed();
+
+	UFUNCTION(BlueprintPure, Category = "Movement")
+	bool IsIdle();
+
+	UFUNCTION(BlueprintPure, Category = "Movement")
+	bool IsWalk();
+
+	UFUNCTION(BlueprintPure, Category = "Movement")
+	bool IsSprint();
 };
