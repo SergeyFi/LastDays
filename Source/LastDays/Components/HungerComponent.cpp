@@ -25,6 +25,7 @@ void UHungerComponent::BeginPlay()
 	StartStarvationThirstTimer();
 }
 
+
 void UHungerComponent::StartStarvationThirstTimer_Implementation()
 {
 	UWorld* World = GetWorld();
@@ -59,11 +60,13 @@ void UHungerComponent::RemoveStarvationThirst_Implementation(float StarvationRem
 	if (Starvation <= 0.f)
 	{
 		Starvation = 0.f;
+		OnStarving.Broadcast();
 	}
 
 	if (Thirst <= 0.f)
 	{
 		Thirst = 0.f;
+		OnThirsty.Broadcast();
 	}
 
 	UpdateStarvationThirstClient(Starvation, Thirst);
@@ -73,4 +76,32 @@ void UHungerComponent::UpdateStarvationThirstClient_Implementation(float Starvat
 {
 	Starvation = StarvationServer;
 	Thirst = ThirstServer;
+}
+
+bool UHungerComponent::IsStarving()
+{
+	if (Starvation == 0.f)
+	{
+		return true;
+	}
+	else return false;
+}
+
+bool UHungerComponent::IsThirsty()
+{
+	if (Thirst == 0.f)
+	{
+		return true;
+	}
+	else return false;
+}
+
+float UHungerComponent::GetStarvation()
+{
+	return Starvation;
+}
+
+float UHungerComponent::GetThirst()
+{
+	return Thirst;
 }

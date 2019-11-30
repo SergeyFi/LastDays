@@ -28,6 +28,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
 	class UHungerComponent* HungerComponent;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
+	class UHealthComponent* HealthComponent;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -38,5 +41,7 @@ public:
 	class UMovementHandlerComponent* GetMovementHandler();
 
 	class UStaminaComponent* GetStaminaComponent();
+
+	class UHungerComponent* GetHungerComponent();
 
 };

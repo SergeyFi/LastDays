@@ -22,23 +22,56 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Properties")
+	// Health
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Health")
 	float HealthCurrent;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
 	float HealthMax;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
+	float HealthCicleRate;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
+	float HealthRegenerationMultiplier;
 
 	UFUNCTION(Client, Reliable)
 	void UpdateHealthClient(float Health);
 
-	UPROPERTY(BlueprintAssignable, Category = "Health")
-	FDeathDelegate OnDeath;
+	UFUNCTION(Server, Reliable)
+	void StartMainHealthCicle();
+
+	UFUNCTION(Server, Reliable)
+	void MainHealthCicle();
+
+	UFUNCTION(Server, Reliable)
+	void HealthRegeneration();
+
+	FTimerHandle MainHealthTimer;
 
 
+	// Other
+	class ABaseCharacter* OwnerCharacter;
 
+
+	// Hunger
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hunger")
+	float StarvingDamageAmount;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hunger")
+	float ThirstDamageAmount;
+
+	UFUNCTION(Server, Reliable)
+	void HungerDamage();
 public:
 
 	UFUNCTION(Server, Reliable)
 	void RemoveHealth(float Damage);
+
+	UFUNCTION(Server, Reliable)
+	void AddHealth(float Heal);
+
+	UPROPERTY(BlueprintAssignable, Category = "Health")
+	FDeathDelegate OnHealthEnded;
 
 };

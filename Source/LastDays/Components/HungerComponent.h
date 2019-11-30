@@ -6,6 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "HungerComponent.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FHungerDelegate);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class LASTDAYS_API UHungerComponent : public UActorComponent
@@ -62,4 +63,22 @@ protected:
 
 	UFUNCTION(Client, Reliable)
 	void UpdateStarvationThirstClient(float StarvationServer, float ThirstServer);
+
+	FHungerDelegate OnStarving;
+
+	FHungerDelegate OnThirsty;
+
+public:
+
+	UFUNCTION(BlueprintPure, Category = "Hunger")
+	bool IsStarving();
+
+	UFUNCTION(BlueprintPure, Category = "Hunger")
+	bool IsThirsty();
+
+	UFUNCTION(BlueprintPure, Category = "Hunger")
+	float GetStarvation();
+
+	UFUNCTION(BlueprintPure, Category = "Hunger")
+	float GetThirst();
 };
