@@ -7,6 +7,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/StaminaComponent.h"
 #include "Components/HungerComponent.h"
+#include "Components/HealthComponent.h"
 
 // Sets default values
 ABaseCharacter::ABaseCharacter()
@@ -22,6 +23,8 @@ ABaseCharacter::ABaseCharacter()
 	StaminaComponent = CreateDefaultSubobject<UStaminaComponent>(TEXT("StaminaComponent"));
 
 	HungerComponent = CreateDefaultSubobject<UHungerComponent>(TEXT("HungerComponent"));
+
+	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));
 
 }
 
@@ -71,4 +74,9 @@ UMovementHandlerComponent* ABaseCharacter::GetMovementHandler()
 UStaminaComponent* ABaseCharacter::GetStaminaComponent()
 {
 	return StaminaComponent;
+}
+
+UHungerComponent* ABaseCharacter::GetHungerComponent()
+{
+	return HungerComponent;
 }
