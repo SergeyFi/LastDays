@@ -11,6 +11,8 @@ AHumanCharacter::AHumanCharacter()
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
 	SpringArm->SetupAttachment(Cast<USceneComponent>(GetCapsuleComponent()));
 	SpringArm->bUsePawnControlRotation = true;
+	SpringArm->TargetArmLength = 0.f;
+	SpringArm->SetRelativeLocation(FVector(0.f, 0.f, 60.f));
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(SpringArm);

@@ -51,9 +51,35 @@ void UMovementHandlerComponent::JumpCustomClient_Implementation()
 	}
 }
 
+
 void UMovementHandlerComponent::MoveForward(float Value)
 {
-	if (OwnerCharacter != nullptr) OwnerCharacter->AddMovementInput(OwnerCharacter->GetActorForwardVector(), Value);
+	if (OwnerCharacter != nullptr)
+	{
+		OwnerCharacter->AddMovementInput(OwnerCharacter->GetActorForwardVector(), Value);
+
+		CheckIsMoveForward(Value);
+	}
+}
+
+void UMovementHandlerComponent::CheckIsMoveForward_Implementation(float Value)
+{
+	if (Value > 0.f)
+	{
+		bIsMoveForward = true;
+	}
+	else
+	{
+		bIsMoveForward = false;
+		SprintStopServerClient();
+	}
+
+	UpdateIsMoveForwardClient(bIsMoveForward);
+}
+
+void UMovementHandlerComponent::UpdateIsMoveForwardClient_Implementation(bool MoveForward)
+{
+	bIsMoveForward = MoveForward;
 }
 
 void UMovementHandlerComponent::MoveRight(float Value)
@@ -83,7 +109,7 @@ void UMovementHandlerComponent::CrouchEnd()
 
 void UMovementHandlerComponent::SprintStartServer_Implementation()
 {
-	if (OwnerCharacter != nullptr && !OwnerCharacter->GetMovementComponent()->Velocity.IsZero())
+	if (OwnerCharacter != nullptr && !OwnerCharacter->GetMovementComponent()->Velocity.IsZero() && bIsMoveForward)
 	{
 		OwnerCharacter->GetCharacterMovement()->MaxWalkSpeed = SprintSpeed;
 

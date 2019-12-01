@@ -29,11 +29,20 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 	float SprintSpeed;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement")
+	bool bIsMoveForward;
+
 	UFUNCTION(Client, Reliable)
 	void SprintStartClient();
 
 	UFUNCTION(Client, Reliable)
 	void SprintStopClient();
+
+	UFUNCTION(Server, Reliable)
+	void CheckIsMoveForward(float value);
+
+	UFUNCTION(Client, Reliable)
+	void UpdateIsMoveForwardClient(bool MoveForward);
 
 public:
 
