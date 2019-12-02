@@ -10,8 +10,6 @@
 // Sets default values for this component's properties
 UStaminaComponent::UStaminaComponent()
 {
-	PrimaryComponentTick.bCanEverTick = true;
-
 	StaminaMax = 100.f;
 	StaminaCurrent = StaminaMax;
 	SprintWastePeriod = 0.5f;
@@ -19,8 +17,6 @@ UStaminaComponent::UStaminaComponent()
 	JumpStaminaCost = 10.f;
 	StaminaRegenerationPeriod = 1.f;
 	StaminaRegenerationAmount = 1.f;
-	bCanJump = true;
-	bCanSprint = true;
 
 	OwnerCharacter = Cast<ABaseCharacter>(GetOwner());
 }
@@ -33,64 +29,44 @@ void UStaminaComponent::BeginPlay()
 
 	if (OwnerCharacter != nullptr)
 	{
-		OwnerCharacter->GetMovementHandler()->OnJump.AddDynamic(this, &UStaminaComponent::DecreaseStaminaJumpServerClient);
+		OwnerCharacter->GetMovementHandler()->OnJump.AddDynamic(this, &UStaminaComponent::DecreaseStaminaOnJump);
 
-		OwnerCharacter->GetMovementHandler()->OnSprint.AddDynamic(this, &UStaminaComponent::StaminaWasteStartServerClient);
+		OwnerCharacter->GetMovementHandler()->OnSprint.AddDynamic(this, &UStaminaComponent::StartWastestaminaOnSprint);
 
-		OwnerCharacter->GetMovementHandler()->OnStopSprint.AddDynamic(this, &UStaminaComponent::StaminaWasteStopServerClient);
+		OwnerCharacter->GetMovementHandler()->OnStopSprint.AddDynamic(this, &UStaminaComponent::StopStaminaWasteOnStopSprint);
 	}
 
 	UWorld* World = GetWorld();
 	if (World != nullptr)
 	{
-		World->GetTimerManager().SetTimer(StaminaRegenerationTimer, this, &UStaminaComponent::RegenerateStaminaServer, StaminaRegenerationPeriod, true, 0.f);
+		World->GetTimerManager().SetTimer(StaminaRegenerationTimer, this, &UStaminaComponent::RegenerateStamina, StaminaRegenerationPeriod, true, 0.f);
 	}
 
 }
 
-void UStaminaComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-}
 
-
-void UStaminaComponent::DecreaseStaminaJumpServerClient_Implementation()
+void UStaminaComponent::DecreaseStaminaOnJump_Implementation()
 {
 	if (StaminaCurrent >= JumpStaminaCost)
 	{
 		StaminaCurrent -= JumpStaminaCost;
 	}
-	else
-	{
-		bCanJump = false;
-	}
 
-	DecreaseStaminaJumpClient();
+	UpdateStaminaClient(StaminaCurrent);
 }
 
-void UStaminaComponent::DecreaseStaminaJumpClient_Implementation()
-{
-	if (StaminaCurrent >= JumpStaminaCost)
-	{
-		StaminaCurrent -= JumpStaminaCost;
-	}
-	else
-	{
-		bCanJump = false;
-	}
-}
 
-void UStaminaComponent::StaminaWasteStartClient_Implementation()
+void UStaminaComponent::StartWastestaminaOnSprint_Implementation()
 {
 	UWorld* World = GetWorld();
 
 	if (World != nullptr)
 	{
-		World->GetTimerManager().SetTimer(SprintTimer, this, &UStaminaComponent::SprintWasteClient, SprintWastePeriod, true, 0.f);
+		World->GetTimerManager().SetTimer(SprintTimer, this, &UStaminaComponent::SprintStaminaWaste, SprintWastePeriod, true, 0.f);
 	}
 }
 
-void UStaminaComponent::StaminaWasteStopClient_Implementation()
+void UStaminaComponent::StopStaminaWasteOnStopSprint_Implementation()
 {
 	UWorld* World = GetWorld();
 
@@ -100,81 +76,41 @@ void UStaminaComponent::StaminaWasteStopClient_Implementation()
 	}
 }
 
-void UStaminaComponent::StaminaWasteStartServerClient_Implementation()
-{
-	UWorld* World = GetWorld();
 
-	if (World != nullptr)
-	{
-		World->GetTimerManager().SetTimer(SprintTimer, this, &UStaminaComponent::SprintWasteServer, SprintWastePeriod, true, 0.f);
-	}
-
-	StaminaWasteStartClient();
-}
-
-void UStaminaComponent::StaminaWasteStopServerClient_Implementation()
-{
-	UWorld* World = GetWorld();
-
-	if (World != nullptr)
-	{
-		World->GetTimerManager().ClearTimer(SprintTimer);
-	}
-
-	StaminaWasteStopClient();
-}
-
-
-void UStaminaComponent::SprintWasteServer_Implementation()
+void UStaminaComponent::SprintStaminaWaste_Implementation()
 {
 	StaminaCurrent -= SprintStaminaCost;
 
 	if (StaminaCurrent <= 0)
 	{
 		StaminaCurrent = 0.f;
-		bCanSprint = false;
 
 		if (OwnerCharacter != nullptr) OwnerCharacter->GetMovementHandler()->SprintStopServerClient();
-
-		StaminaWasteStopServerClient();
 	}
+
+	UpdateStaminaClient(StaminaCurrent);
 }
 
-void UStaminaComponent::SprintWasteClient_Implementation()
-{
-	StaminaCurrent -= SprintStaminaCost;
-
-	if (StaminaCurrent <= 0)
-	{
-		StaminaCurrent = 0.f;
-		bCanSprint = false;
-
-		if (OwnerCharacter != nullptr) OwnerCharacter->GetMovementHandler()->SprintStopServerClient();
-
-		StaminaWasteStopServerClient();
-	}
-}
-
-
-
-void UStaminaComponent::RegenerateStaminaServer_Implementation()
+void UStaminaComponent::RegenerateStamina_Implementation()
 {
 	StaminaCurrent += StaminaRegenerationAmount;
 
 	if (StaminaCurrent > StaminaMax) StaminaCurrent = 100.f;
 
-	if (StaminaCurrent >= JumpStaminaCost) bCanJump = true;
-
-	if (StaminaCurrent < JumpStaminaCost) bCanJump = false;
-
-	RegenerateStaminaClient(StaminaCurrent);
+	UpdateStaminaClient(StaminaCurrent);
 }
 
-void UStaminaComponent::RegenerateStaminaClient_Implementation(float Stamina)
+void UStaminaComponent::UpdateStaminaClient_Implementation(float Stamina)
 {
 	StaminaCurrent = Stamina;
+}
 
-	if (StaminaCurrent >= JumpStaminaCost) bCanJump = true;
+bool UStaminaComponent::CanJump()
+{
+	if (StaminaCurrent < JumpStaminaCost)
+	{
+		return false;
+	}
 
-	if (StaminaCurrent < JumpStaminaCost) bCanJump = false;
+	else return true;
 }

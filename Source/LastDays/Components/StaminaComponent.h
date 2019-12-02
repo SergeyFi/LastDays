@@ -47,43 +47,25 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
 	float SprintStaminaCost;
 
-	UFUNCTION(Client, Reliable)
-	void DecreaseStaminaJumpClient();
+	UFUNCTION(Server, Reliable)
+	void DecreaseStaminaOnJump();
 
 	UFUNCTION(Server, Reliable)
-	void DecreaseStaminaJumpServerClient();
-
-	UFUNCTION(Client, Reliable)
-	void SprintWasteClient();
+	void SprintStaminaWaste();
 
 	UFUNCTION(Server, Reliable)
-	void SprintWasteServer();
-
-	UFUNCTION(Client, Reliable)
-	void StaminaWasteStartClient();
-
-	UFUNCTION(Client, Reliable)
-	void StaminaWasteStopClient();
+	void StartWastestaminaOnSprint();
 
 	UFUNCTION(Server, Reliable)
-	void StaminaWasteStartServerClient();
+	void StopStaminaWasteOnStopSprint();
 
 	UFUNCTION(Server, Reliable)
-	void StaminaWasteStopServerClient();
-
-	UFUNCTION(Server, Reliable)
-	void RegenerateStaminaServer();
+	void RegenerateStamina();
 
 	UFUNCTION(Client, Reliable)
-	void RegenerateStaminaClient(float Stamina);
+	void UpdateStaminaClient(float Stamina);
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
-	bool bCanJump;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Properties")
-	bool bCanSprint;
-
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	UFUNCTION()
+	bool CanJump();
 };
