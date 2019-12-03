@@ -28,9 +28,9 @@ void UMovementHandlerComponent::BeginPlay()
 
 void UMovementHandlerComponent::JumpCustomServer_Implementation()
 {
-	if (OwnerCharacter != nullptr && OwnerCharacter->GetCharacterMovement()->IsWalking())
+	if (OwnerCharacter != nullptr)
 	{
-		if (OwnerCharacter->GetStaminaComponent()->CanJump())
+		if (OwnerCharacter->GetStaminaComponent()->CanJump() && OwnerCharacter->GetCharacterMovement()->IsWalking())
 		{
 			OwnerCharacter->Jump();
 
@@ -43,12 +43,9 @@ void UMovementHandlerComponent::JumpCustomServer_Implementation()
 
 void UMovementHandlerComponent::JumpCustomClient_Implementation()
 {
-	if (OwnerCharacter != nullptr && OwnerCharacter->GetCharacterMovement()->IsWalking())
+	if (OwnerCharacter != nullptr)
 	{
-		if (OwnerCharacter->GetStaminaComponent()->CanJump())
-		{
-			OwnerCharacter->Jump();
-		}
+		OwnerCharacter->Jump();
 	}
 }
 
@@ -134,7 +131,7 @@ void UMovementHandlerComponent::SprintStopServerClient_Implementation()
 
 void UMovementHandlerComponent::SprintStartClient_Implementation()
 {
-	if (OwnerCharacter != nullptr && !OwnerCharacter->GetMovementComponent()->Velocity.IsZero())
+	if (OwnerCharacter != nullptr)
 	{
 		OwnerCharacter->GetCharacterMovement()->MaxWalkSpeed = SprintSpeed;
 	}
