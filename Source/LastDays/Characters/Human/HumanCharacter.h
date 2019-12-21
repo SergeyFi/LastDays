@@ -22,5 +22,25 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
 	class UCameraComponent* Camera;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
+	class UObjectFinderComponent* ObjectFinder;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
+	class UCapsuleComponent* ObjectFinderCapsule;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
+	class UHumanInventory* InventoryComponent;
+
+public:
+
+	// Called to bind functionality to input
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	class UCameraComponent* GetCameraComponent();
+
+	class UCapsuleComponent* GetObjectFinderCapsule();
+
+	class UHumanInventory* GetInventoryComponent();
 	
 };

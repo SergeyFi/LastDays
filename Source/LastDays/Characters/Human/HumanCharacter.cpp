@@ -5,6 +5,9 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/ObjectFinderComponent.h"
+#include "Components/InputComponent.h"
+#include "Components/HumanInventory.h"
 
 AHumanCharacter::AHumanCharacter()
 {
@@ -16,4 +19,33 @@ AHumanCharacter::AHumanCharacter()
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(SpringArm);
+
+	ObjectFinder = CreateDefaultSubobject<UObjectFinderComponent>(TEXT("ObjectFinder"));
+
+	ObjectFinderCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("ObjectFinderCapsule"));
+	ObjectFinderCapsule->SetupAttachment(Cast<USceneComponent>(Camera));
+
+	InventoryComponent = CreateDefaultSubobject<UHumanInventory>(TEXT("InventoryComponent"));
+}
+
+void AHumanCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+{
+	Super::SetupPlayerInputComponent(PlayerInputComponent);
+
+	PlayerInputComponent->BindAction("Use", IE_Pressed, ObjectFinder, &UObjectFinderComponent::UseInteractableObject);
+}
+
+UCameraComponent* AHumanCharacter::GetCameraComponent()
+{
+	return Camera;
+}
+
+UCapsuleComponent* AHumanCharacter::GetObjectFinderCapsule()
+{
+	return ObjectFinderCapsule;
+}
+
+UHumanInventory* AHumanCharacter::GetInventoryComponent()
+{
+	return InventoryComponent;
 }
