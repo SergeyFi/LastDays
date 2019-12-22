@@ -39,6 +39,9 @@ protected:
 	UTexture2D* Icon;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties|Base")
+	float Condition;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties|Base")
 	float Weight;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties|Base")
@@ -48,7 +51,13 @@ protected:
 	bool bIsStackable;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties|Base")
+	bool bIsInventoryStackable;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties|Base")
 	int32 StackSize;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties|Base")
+	int32 ItemCount;
 		
 
 public:
@@ -64,4 +73,22 @@ public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Interactive objects")
 	FText GetActionName();
 	virtual FText GetActionName_Implementation() override;
+
+	FText GetItemName();
+
+	int32 GetItemCount();
+
+	float GetCondition();
+
+	float GetWeight();
+
+	float GetWeightTotal();
+
+	float GetVolume();
+
+	float GetVolumeTotal();
+
+	bool IsInventoryStackable();
+
+	int32 RemoveItems(int32 ItemCount);
 };

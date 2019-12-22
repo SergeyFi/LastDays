@@ -12,7 +12,18 @@ AItemBase::AItemBase()
 {
 	PrimaryActorTick.bCanEverTick = false;
 	bReplicates = true;
+	
+	// Item default properties
+	StackSize = 1;
+	ItemCount = StackSize;
+	Condition = 100.f;
+	Weight = 1.f;
+	Volume = 1.f;
+	bIsInventoryStackable = true;
+	ItemName = FText::FromString(TEXT("None"));
+	ActionName = FText::FromString(TEXT("None"));
 
+	// Components
 	Root = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
 	RootComponent = Root;
 	
@@ -24,9 +35,6 @@ AItemBase::AItemBase()
 	SphereCollision = CreateDefaultSubobject<USphereComponent>(TEXT("SphereCollision"));
 	SphereCollision->SetupAttachment(SkeletalMesh);
 	SphereCollision->SetCollisionProfileName(TEXT("OverlapAll"));
-
-	ItemName = FText::FromString(TEXT("None"));
-	ActionName = FText::FromString(TEXT("None"));
 }
 
 // Called when the game starts or when spawned
@@ -53,5 +61,54 @@ FText AItemBase::GetActionName_Implementation()
 	return ActionName;
 }
 
+FText AItemBase::GetItemName()
+{
+	return ItemName;
+}
 
+int32 AItemBase::GetItemCount()
+{
+	return ItemCount;
+}
 
+float AItemBase::GetCondition()
+{
+	return Condition;
+}
+
+float AItemBase::GetWeight()
+{
+	return Weight;
+}
+
+float AItemBase::GetWeightTotal()
+{
+	return Weight * ItemCount;
+}
+
+float AItemBase::GetVolume()
+{
+	return Volume;
+}
+
+float AItemBase::GetVolumeTotal()
+{
+	return Volume * ItemCount;
+}
+
+bool AItemBase::IsInventoryStackable()
+{
+	return bIsInventoryStackable;
+}
+
+int32 AItemBase::RemoveItems(int32 ItemCount)
+{
+	this->ItemCount -= ItemCount;
+
+	if (this->ItemCount <= 0)
+	{
+		this->Destroy();
+	}
+
+	return ItemCount;
+}
