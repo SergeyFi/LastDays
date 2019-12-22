@@ -89,8 +89,6 @@ protected:
 
 	int32 GetItemIndex(class AItemBase* Item);
 
-	bool CanAddItem(class AItemBase* Item);
-
 	int32 ItemAmountCanAdd(class AItemBase* Item);
 
 	void UpdateWeightAndVolume();

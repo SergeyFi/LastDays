@@ -25,7 +25,7 @@ void UHumanInventory::AddItemToInventory_Implementation(class AItemBase* Item)
 {
 	int32 ItemAmount = ItemAmountCanAdd(Item);
 
-	if (Item != nullptr && CanAddItem(Item) && ItemAmount > 0)
+	if (Item != nullptr && ItemAmount > 0)
 	{
 		int32 InventoryIndex = GetItemIndex(Item);
 
@@ -57,11 +57,6 @@ int32 UHumanInventory::GetItemIndex(AItemBase* Item)
 	}
 
 	return -1;
-}
-
-bool UHumanInventory::CanAddItem(class AItemBase* Item)
-{
-	return true;
 }
 
 int32 UHumanInventory::ItemAmountCanAdd(AItemBase* Item)
