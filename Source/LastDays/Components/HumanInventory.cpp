@@ -23,7 +23,9 @@ void UHumanInventory::BeginPlay()
 
 void UHumanInventory::AddItemToInventory_Implementation(class AItemBase* Item)
 {
-	if (Item != nullptr && CanAddItem(Item))
+	int32 ItemAmount = ItemAmountCanAdd(Item);
+
+	if (Item != nullptr && CanAddItem(Item) && ItemAmount > 0)
 	{
 		int32 InventoryIndex = GetItemIndex(Item);
 
@@ -31,13 +33,15 @@ void UHumanInventory::AddItemToInventory_Implementation(class AItemBase* Item)
 		{
 			// Create new inventory slot
 			AItemBase* ItemDuplicated = DuplicateObject(Item, this);
-			Inventory.Add(FInventoryItem(ItemDuplicated, Item->RemoveItems(ItemAmountCanAdd(Item))));
+			Inventory.Add(FInventoryItem(ItemDuplicated, Item->RemoveItems(ItemAmount)));
 		}
 		else 
 		{
 			// Append inventory slot
-			Inventory[InventoryIndex].AppendItem(Item->RemoveItems(ItemAmountCanAdd(Item)));
+			Inventory[InventoryIndex].AppendItem(Item->RemoveItems(ItemAmount));
 		}
+
+		UpdateWeightAndVolume();
 	}
 }
 
@@ -66,4 +70,16 @@ int32 UHumanInventory::ItemAmountCanAdd(AItemBase* Item)
 	int32 ItemCanAddByVolume = (VolumeMax - VolumeCurrent) / Item->GetVolume();
 
 	return FMath::Clamp(FMath::Min(ItemCanAddByWeight, ItemCanAddByVolume), 0, Item->GetItemCount());
+}
+
+void UHumanInventory::UpdateWeightAndVolume()
+{
+	WeightCurrent = 0.f;
+	VolumeCurrent = 0.f;
+
+	for (int32 i = 0; i < Inventory.Num(); i++)
+	{
+		WeightCurrent += Inventory[i].Weight;
+		VolumeCurrent += Inventory[i].Volume;
+	}
 }

@@ -93,6 +93,8 @@ protected:
 
 	int32 ItemAmountCanAdd(class AItemBase* Item);
 
+	void UpdateWeightAndVolume();
+
 public:
 
 	UFUNCTION(Server, Reliable)
