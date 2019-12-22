@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Items/ItemBase.h"
 #include "HumanInventory.generated.h"
 
 USTRUCT(BlueprintType)
@@ -23,6 +24,9 @@ public:
 	int32 ItemCount;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	float Condition;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	float Weight;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
@@ -33,11 +37,24 @@ public:
 
 	FInventoryItem()
 	{
-		Item = nullptr;
-		ItemName = FText::FromString(TEXT("None"));
-		ItemCount = 0;
-		Weight = 0.f;
-		Volume = 0.f;
+	}
+
+	FInventoryItem(class AItemBase* Item, int32 ItemCount)
+	{
+		this->Item = Item;
+		this->ItemName = Item->GetItemName();
+		this->ItemCount = ItemCount;
+		this->Condition = Item->GetCondition();
+		Weight = Item->GetWeightTotal();
+		Volume = Item->GetVolumeTotal();
+		bIsStackable = Item->IsInventoryStackable();
+	}
+
+	void AppendItem(int32 CountItem)
+	{
+		this->ItemCount += CountItem;
+		Weight = this->ItemCount * Item->GetWeight();
+		Volume = this->ItemCount * Item->GetVolume();
 	}
 };
 
@@ -58,23 +75,27 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
 	TArray<FInventoryItem> Inventory;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Properties")
 	float WeightCurrent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
 	float WeightMax;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Properties")
 	float VolumeCurrent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
 	float VolumeMax;
 
+	int32 GetItemIndex(class AItemBase* Item);
+
+	bool CanAddItem(class AItemBase* Item);
+
+	int32 ItemAmountCanAdd(class AItemBase* Item);
+
 public:
 
 	UFUNCTION(Server, Reliable)
 	void AddItemToInventory(class AItemBase* Item);
-
-	bool CanAddItem(class AItemBase* Item);
 		
 };
