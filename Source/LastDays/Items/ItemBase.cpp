@@ -22,6 +22,7 @@ AItemBase::AItemBase()
 	bIsInventoryStackable = true;
 	ItemName = FText::FromString(TEXT("None"));
 	ActionName = FText::FromString(TEXT("None"));
+	Description = FText::FromString(TEXT("None"));
 
 	// Components
 	Root = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
@@ -41,6 +42,9 @@ AItemBase::AItemBase()
 void AItemBase::BeginPlay()
 {
 	Super::BeginPlay();
+
+	if (Weight == 0.f) Weight = 0.001;
+	if (Volume == 0.f) Volume = 0.001;
 	
 }
 

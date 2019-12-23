@@ -36,6 +36,9 @@ protected:
 	FText ActionName;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties|Base")
+	FText Description;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties|Base")
 	UTexture2D* Icon;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties|Base")
