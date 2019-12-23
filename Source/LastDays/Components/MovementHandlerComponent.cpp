@@ -87,12 +87,12 @@ void UMovementHandlerComponent::MoveRight(float Value)
 
 void UMovementHandlerComponent::YawView(float Value)
 {
-	if (OwnerCharacter != nullptr) OwnerCharacter->AddControllerYawInput(Value);
+	if (OwnerCharacter != nullptr && !bIgnoreInput) OwnerCharacter->AddControllerYawInput(Value);
 }
 
 void UMovementHandlerComponent::PitchView(float Value)
 {
-	if (OwnerCharacter != nullptr) OwnerCharacter->AddControllerPitchInput(Value);
+	if (OwnerCharacter != nullptr && !bIgnoreInput) OwnerCharacter->AddControllerPitchInput(Value);
 }
 
 void UMovementHandlerComponent::CrouchStart()

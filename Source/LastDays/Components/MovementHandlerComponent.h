@@ -32,6 +32,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement")
 	bool bIsMoveForward;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Movement")
+	bool bIgnoreInput;
+
 	UFUNCTION(Client, Reliable)
 	void SprintStartClient();
 
