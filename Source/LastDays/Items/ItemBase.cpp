@@ -116,3 +116,8 @@ int32 AItemBase::RemoveItems(int32 ItemCount)
 
 	return ItemCount;
 }
+
+FText AItemBase::GetDescription()
+{
+	return Description;
+}

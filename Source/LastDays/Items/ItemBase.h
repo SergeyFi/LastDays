@@ -94,4 +94,6 @@ public:
 	bool IsInventoryStackable();
 
 	int32 RemoveItems(int32 ItemCount);
+
+	FText GetDescription();
 };
