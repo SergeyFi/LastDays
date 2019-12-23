@@ -21,6 +21,9 @@ public:
 	FText ItemName;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	FText Description;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	int32 ItemCount;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
@@ -45,6 +48,7 @@ public:
 		this->ItemName = Item->GetItemName();
 		this->ItemCount = ItemCount;
 		this->Condition = Item->GetCondition();
+		this->Description = Item->GetDescription();
 		Weight = Item->GetWeightTotal();
 		Volume = Item->GetVolumeTotal();
 		bIsStackable = Item->IsInventoryStackable();
