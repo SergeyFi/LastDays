@@ -70,7 +70,7 @@ class LASTDAYS_API UHumanInventory : public UActorComponent
 
 public:	
 	// Sets default values for this component's properties
-	UHumanInventory();
+	UHumanInventory(const FObjectInitializer& ObjectInitializer);
 
 protected:
 	// Called when the game starts
@@ -97,9 +97,21 @@ protected:
 
 	void UpdateWeightAndVolume();
 
+	UFUNCTION(Client, Reliable)
+	void UpdateInventoryClient(const TArray<FInventoryItem> &InventoryServer);
+
 public:
+	UPROPERTY(Replicated)
+	uint32 bReplicatedFlag : 1;
+
+	virtual bool IsSupportedForNetworking() const override
+	{
+		return true;
+	}
 
 	UFUNCTION(Server, Reliable)
 	void AddItemToInventory(class AItemBase* Item);
-		
+
+	UFUNCTION(Server, Reliable, BlueprintCallable)
+	void UpdateInventory();
 };

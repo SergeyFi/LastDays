@@ -2,15 +2,26 @@
 
 
 #include "HumanInventory.h"
+#include "UnrealNetwork.h"
+#include "Net/UnrealNetwork.h"
 
 // Sets default values for this component's properties
-UHumanInventory::UHumanInventory()
+UHumanInventory::UHumanInventory(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
 {
 	PrimaryComponentTick.bCanEverTick = false;
+	bReplicates = true;
 
 	// Inventory default properties
 	WeightMax = 10.f;
 	VolumeMax = 10.f;
+}
+
+void UHumanInventory::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(UHumanInventory, bReplicatedFlag);
 }
 
 
@@ -42,6 +53,7 @@ void UHumanInventory::AddItemToInventory_Implementation(class AItemBase* Item)
 		}
 
 		UpdateWeightAndVolume();
+		UpdateInventory();
 	}
 }
 
@@ -77,4 +89,14 @@ void UHumanInventory::UpdateWeightAndVolume()
 		WeightCurrent += Inventory[i].Weight;
 		VolumeCurrent += Inventory[i].Volume;
 	}
+}
+
+void UHumanInventory::UpdateInventoryClient_Implementation(const TArray<FInventoryItem> &InventoryServer)
+{
+	Inventory = InventoryServer;
+}
+
+void UHumanInventory::UpdateInventory_Implementation()
+{
+	UpdateInventoryClient(Inventory);
 }

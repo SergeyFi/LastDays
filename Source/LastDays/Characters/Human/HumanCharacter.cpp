@@ -9,8 +9,11 @@
 #include "Components/InputComponent.h"
 #include "Components/HumanInventory.h"
 
+
 AHumanCharacter::AHumanCharacter()
 {
+	SetReplicates(true);
+
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
 	SpringArm->SetupAttachment(Cast<USceneComponent>(GetCapsuleComponent()));
 	SpringArm->bUsePawnControlRotation = true;
@@ -24,8 +27,14 @@ AHumanCharacter::AHumanCharacter()
 
 	ObjectFinderCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("ObjectFinderCapsule"));
 	ObjectFinderCapsule->SetupAttachment(Cast<USceneComponent>(Camera));
+	ObjectFinderCapsule->SetCapsuleHalfHeight(120.f);
+	ObjectFinderCapsule->SetCapsuleRadius(30.f);
+	ObjectFinderCapsule->SetRelativeLocation(FVector(130.f, 0.f, 0.f));
+	ObjectFinderCapsule->SetRelativeRotation(FQuat(180.f, -90.f, 180.f, 0.f));
 
 	InventoryComponent = CreateDefaultSubobject<UHumanInventory>(TEXT("InventoryComponent"));
+	InventoryComponent->SetNetAddressable();
+	InventoryComponent->SetIsReplicated(true);
 }
 
 void AHumanCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
