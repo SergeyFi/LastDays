@@ -5,7 +5,8 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "Items/ItemBase.h"
-#include "HumanInventory.generated.h"
+#include "InventoryComponent.generated.h"
+
 
 USTRUCT(BlueprintType)
 struct FInventoryItem
@@ -15,28 +16,28 @@ struct FInventoryItem
 public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	class AItemBase* Item;
+		class AItemBase* Item;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	FText ItemName;
+		FText ItemName;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	FText Description;
+		FText Description;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	int32 ItemCount;
+		int32 ItemCount;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	float Condition;
+		float Condition;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	float Weight;
+		float Weight;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	float Volume;
+		float Volume;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	bool bIsStackable;
+		bool bIsStackable;
 
 	FInventoryItem()
 	{
@@ -62,15 +63,14 @@ public:
 	}
 };
 
-
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class LASTDAYS_API UHumanInventory : public UActorComponent
+class LASTDAYS_API UInventoryComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
 public:	
 	// Sets default values for this component's properties
-	UHumanInventory(const FObjectInitializer& ObjectInitializer);
+	UInventoryComponent();
 
 protected:
 	// Called when the game starts
@@ -98,20 +98,14 @@ protected:
 	void UpdateWeightAndVolume();
 
 	UFUNCTION(Client, Reliable)
-	void UpdateInventoryClient(const TArray<FInventoryItem> &InventoryServer);
+	void UpdateInventoryClient(const TArray<FInventoryItem>& InventoryServer);
 
 public:
-	UPROPERTY(Replicated)
-	uint32 bReplicatedFlag : 1;
-
-	virtual bool IsSupportedForNetworking() const override
-	{
-		return true;
-	}
 
 	UFUNCTION(Server, Reliable)
 	void AddItemToInventory(class AItemBase* Item);
 
 	UFUNCTION(Server, Reliable, BlueprintCallable)
 	void UpdateInventory();
+		
 };

@@ -30,7 +30,7 @@ protected:
 	class UCapsuleComponent* ObjectFinderCapsule;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
-	class UHumanInventory* InventoryComponent;
+	class UInventoryComponent* InventoryComponent;
 
 public:
 
@@ -41,6 +41,6 @@ public:
 
 	class UCapsuleComponent* GetObjectFinderCapsule();
 
-	class UHumanInventory* GetInventoryComponent();
+	class UInventoryComponent* GetInventoryComponent();
 	
 };
