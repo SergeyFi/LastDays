@@ -3,6 +3,7 @@
 
 #include "InventoryComponent.h"
 
+
 // Sets default values for this component's properties
 UInventoryComponent::UInventoryComponent()
 {
@@ -18,7 +19,6 @@ UInventoryComponent::UInventoryComponent()
 void UInventoryComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 void UInventoryComponent::AddItemToInventory_Implementation(class AItemBase* Item)
