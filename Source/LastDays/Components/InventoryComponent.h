@@ -16,28 +16,28 @@ struct FInventoryItem
 public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-		class AItemBase* Item;
+	class AItemBase* Item;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-		FText ItemName;
+	FText ItemName;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-		FText Description;
+	FText Description;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-		int32 ItemCount;
+	int32 ItemCount;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-		float Condition;
+	float Condition;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-		float Weight;
+	float Weight;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-		float Volume;
+	float Volume;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-		bool bIsStackable;
+	bool bIsStackable;
 
 	FInventoryItem()
 	{
@@ -76,7 +76,7 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties", Replicated)
 	TArray<FInventoryItem> Inventory;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Properties")
@@ -97,15 +97,10 @@ protected:
 
 	void UpdateWeightAndVolume();
 
-	UFUNCTION(Client, Reliable)
-	void UpdateInventoryClient(const TArray<FInventoryItem>& InventoryServer);
-
 public:
 
 	UFUNCTION(Server, Reliable, BlueprintCallable, Category = "Inventory")
 	void AddItemToInventory(class AItemBase* Item);
-
-	UFUNCTION(Server, Reliable, BlueprintCallable, BlueprintCallable, Category = "Inventory")
-	void UpdateInventory();
-		
+	
+	virtual void GetLifetimeReplicatedProps(TArray < class FLifetimeProperty >& OutLifetimeProps) const override;
 };

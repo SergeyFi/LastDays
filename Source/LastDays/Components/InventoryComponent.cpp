@@ -2,12 +2,15 @@
 
 
 #include "InventoryComponent.h"
+#include "Net/UnrealNetwork.h"
 
 
 // Sets default values for this component's properties
 UInventoryComponent::UInventoryComponent()
 {
 	PrimaryComponentTick.bCanEverTick = false;
+	bReplicates = true;
+	bNetAddressable = true;
 
 	// Inventory default properties
 	WeightMax = 10.f;
@@ -19,6 +22,13 @@ UInventoryComponent::UInventoryComponent()
 void UInventoryComponent::BeginPlay()
 {
 	Super::BeginPlay();
+}
+
+void UInventoryComponent::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME_CONDITION(UInventoryComponent, Inventory, COND_OwnerOnly);
 }
 
 void UInventoryComponent::AddItemToInventory_Implementation(class AItemBase* Item)
@@ -44,7 +54,6 @@ void UInventoryComponent::AddItemToInventory_Implementation(class AItemBase* Ite
 			}
 
 			UpdateWeightAndVolume();
-			UpdateInventory();
 		}
 	}
 }
@@ -81,14 +90,4 @@ void UInventoryComponent::UpdateWeightAndVolume()
 		WeightCurrent += Inventory[i].Weight;
 		VolumeCurrent += Inventory[i].Volume;
 	}
-}
-
-void UInventoryComponent::UpdateInventoryClient_Implementation(const TArray<FInventoryItem>& InventoryServer)
-{
-	Inventory = InventoryServer;
-}
-
-void UInventoryComponent::UpdateInventory_Implementation()
-{
-	UpdateInventoryClient(Inventory);
 }
