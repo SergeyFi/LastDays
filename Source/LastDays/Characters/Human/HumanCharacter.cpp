@@ -7,7 +7,7 @@
 #include "Components/CapsuleComponent.h"
 #include "Components/ObjectFinderComponent.h"
 #include "Components/InputComponent.h"
-#include "Components/InventoryComponent.h"
+#include "Components/HumanInventoryComponent.h"
 
 
 AHumanCharacter::AHumanCharacter()
@@ -32,10 +32,8 @@ AHumanCharacter::AHumanCharacter()
 	ObjectFinderCapsule->SetRelativeLocation(FVector(130.f, 0.f, 0.f));
 	ObjectFinderCapsule->SetRelativeRotation(FQuat(180.f, -90.f, 180.f, 0.f));
 
-	InventoryComponent = CreateDefaultSubobject<UInventoryComponent>(TEXT("InventoryComponent"));
+	InventoryComponent = CreateDefaultSubobject<UHumanInventoryComponent>(TEXT("InventoryComponent"));
 	InventoryComponent->SetIsReplicated(true);
-
-
 }
 
 void AHumanCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -55,7 +53,7 @@ UCapsuleComponent* AHumanCharacter::GetObjectFinderCapsule()
 	return ObjectFinderCapsule;
 }
 
-UInventoryComponent* AHumanCharacter::GetInventoryComponent()
+UHumanInventoryComponent* AHumanCharacter::GetInventoryComponent()
 {
 	return InventoryComponent;
 }

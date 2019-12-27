@@ -3,7 +3,7 @@
 
 #include "ItemBase.h"
 #include "Characters/Human/HumanCharacter.h"
-#include "Components/InventoryComponent.h"
+#include "Components/HumanInventoryComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/SphereComponent.h"
 
