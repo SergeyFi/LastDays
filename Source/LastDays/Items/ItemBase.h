@@ -48,9 +48,6 @@ protected:
 	float Weight;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties|Base")
-	float Volume;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties|Base")
 	bool bIsStackable;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties|Base")
@@ -86,10 +83,6 @@ public:
 	float GetWeight();
 
 	float GetWeightTotal();
-
-	float GetVolume();
-
-	float GetVolumeTotal();
 
 	bool IsInventoryStackable();
 

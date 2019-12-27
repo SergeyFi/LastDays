@@ -14,7 +14,6 @@ UInventoryComponent::UInventoryComponent()
 
 	// Inventory default properties
 	WeightMax = 10.f;
-	VolumeMax = 10.f;
 }
 
 
@@ -53,7 +52,7 @@ void UInventoryComponent::AddItemToInventory_Implementation(class AItemBase* Ite
 				Inventory[InventoryIndex].AppendItem(Item->RemoveItems(ItemAmount));
 			}
 
-			UpdateWeightAndVolume();
+			UpdateWeight();
 		}
 	}
 }
@@ -75,19 +74,16 @@ int32 UInventoryComponent::GetItemIndex(AItemBase* Item)
 int32 UInventoryComponent::ItemAmountCanAdd(AItemBase* Item)
 {
 	int32 ItemCanAddByWeight = (WeightMax - WeightCurrent) / Item->GetWeight();
-	int32 ItemCanAddByVolume = (VolumeMax - VolumeCurrent) / Item->GetVolume();
 
-	return FMath::Clamp(FMath::Min(ItemCanAddByWeight, ItemCanAddByVolume), 0, Item->GetItemCount());
+	return FMath::Clamp(ItemCanAddByWeight, 0, Item->GetItemCount());
 }
 
-void UInventoryComponent::UpdateWeightAndVolume()
+void UInventoryComponent::UpdateWeight()
 {
 	WeightCurrent = 0.f;
-	VolumeCurrent = 0.f;
 
 	for (int32 i = 0; i < Inventory.Num(); i++)
 	{
 		WeightCurrent += Inventory[i].Weight;
-		VolumeCurrent += Inventory[i].Volume;
 	}
 }

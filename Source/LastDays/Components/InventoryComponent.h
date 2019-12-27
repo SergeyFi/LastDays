@@ -34,9 +34,6 @@ public:
 	float Weight;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	float Volume;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	bool bIsStackable;
 
 	FInventoryItem()
@@ -51,7 +48,6 @@ public:
 		this->Condition = Item->GetCondition();
 		this->Description = Item->GetDescription();
 		Weight = Item->GetWeightTotal();
-		Volume = Item->GetVolumeTotal();
 		bIsStackable = Item->IsInventoryStackable();
 	}
 
@@ -59,7 +55,6 @@ public:
 	{
 		this->ItemCount += CountItem;
 		Weight = this->ItemCount * Item->GetWeight();
-		Volume = this->ItemCount * Item->GetVolume();
 	}
 };
 
@@ -95,7 +90,7 @@ protected:
 
 	int32 ItemAmountCanAdd(class AItemBase* Item);
 
-	void UpdateWeightAndVolume();
+	void UpdateWeight();
 
 public:
 

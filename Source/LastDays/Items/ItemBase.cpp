@@ -18,7 +18,6 @@ AItemBase::AItemBase()
 	ItemCount = StackSize;
 	Condition = 100.f;
 	Weight = 1.f;
-	Volume = 1.f;
 	bIsInventoryStackable = true;
 	ItemName = FText::FromString(TEXT("None"));
 	ActionName = FText::FromString(TEXT("None"));
@@ -44,7 +43,6 @@ void AItemBase::BeginPlay()
 	Super::BeginPlay();
 
 	if (Weight == 0.f) Weight = 0.001;
-	if (Volume == 0.f) Volume = 0.001;
 	
 }
 
@@ -88,16 +86,6 @@ float AItemBase::GetWeight()
 float AItemBase::GetWeightTotal()
 {
 	return Weight * ItemCount;
-}
-
-float AItemBase::GetVolume()
-{
-	return Volume;
-}
-
-float AItemBase::GetVolumeTotal()
-{
-	return Volume * ItemCount;
 }
 
 bool AItemBase::IsInventoryStackable()
