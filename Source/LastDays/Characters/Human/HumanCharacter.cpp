@@ -33,6 +33,9 @@ AHumanCharacter::AHumanCharacter()
 	ObjectFinderCapsule->SetRelativeRotation(FQuat(180.f, -90.f, 180.f, 0.f));
 
 	InventoryComponent = CreateDefaultSubobject<UInventoryComponent>(TEXT("InventoryComponent"));
+	InventoryComponent->SetIsReplicated(true);
+
+
 }
 
 void AHumanCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
