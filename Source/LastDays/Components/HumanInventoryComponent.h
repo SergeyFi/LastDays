@@ -20,6 +20,7 @@ protected:
 
 	class AHumanCharacter* HumanOwner;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Properties", Replicated)
 	TArray<AItemBase*> ItemsOnGround;
 
 	TArray<AActor*> InventoriesOnGround;
@@ -40,8 +41,12 @@ protected:
 
 public:
 
+	UFUNCTION(Server, Reliable, BlueprintCallable)
 	void StartCheckGround();
 
+	UFUNCTION(Server, Reliable, BlueprintCallable)
 	void StopCheckGround();
+
+	virtual void GetLifetimeReplicatedProps(TArray < class FLifetimeProperty >& OutLifetimeProps) const override;
 
 };

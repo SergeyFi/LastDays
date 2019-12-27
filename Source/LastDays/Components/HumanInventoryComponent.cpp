@@ -6,15 +6,27 @@
 #include "Runtime/Engine/Public/WorldCollision.h"
 #include "Engine/World.h"
 #include "TimerManager.h"
+#include "Net/UnrealNetwork.h"
 
 UHumanInventoryComponent::UHumanInventoryComponent()
 {
+	CheckRadius = 200.f;
+	GroundCheckPeriod = 0.2;
+
 	HumanOwner = Cast<AHumanCharacter>(GetOwner());
 
 	SphereGroundChecker = FCollisionShape::MakeSphere(CheckRadius);
+
 }
 
-void UHumanInventoryComponent::StartCheckGround()
+void UHumanInventoryComponent::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME_CONDITION(UHumanInventoryComponent, ItemsOnGround, COND_OwnerOnly);
+}
+
+void UHumanInventoryComponent::StartCheckGround_Implementation()
 {
 	UWorld* World = GetWorld();
 
@@ -24,13 +36,15 @@ void UHumanInventoryComponent::StartCheckGround()
 	}
 }
 
-void UHumanInventoryComponent::StopCheckGround()
+void UHumanInventoryComponent::StopCheckGround_Implementation()
 {
 	UWorld* World = GetWorld();
 
 	if (World != nullptr)
 	{
 		World->GetTimerManager().ClearTimer(GroundCheckTimer);
+
+		ItemsOnGround.Empty();
 	}
 }
 
@@ -40,7 +54,7 @@ void UHumanInventoryComponent::CheckGround()
 
 	TArray<FHitResult> OutHits;
 
-	bool bIsHit = GetWorld()->SweepMultiByChannel(OutHits, Location, Location, FQuat::Identity, ECC_WorldStatic, SphereGroundChecker);
+	bool bIsHit = GetWorld()->SweepMultiByChannel(OutHits, Location, Location + 1.f, FQuat::Identity, ECC_WorldStatic, SphereGroundChecker);
 
 	if (bIsHit)
 	{
@@ -52,7 +66,7 @@ void UHumanInventoryComponent::AddActorToGroundItem(TArray<FHitResult> HitResult
 {
 	ItemsOnGround.Empty();
 
-	AItemBase* Item;
+	AItemBase* Item = nullptr;
 
 	for (FHitResult Hit : HitResults)
 	{
@@ -60,7 +74,8 @@ void UHumanInventoryComponent::AddActorToGroundItem(TArray<FHitResult> HitResult
 
 		if (Item != nullptr)
 		{
-			ItemsOnGround.Add(Item);
+			ItemsOnGround.AddUnique(Item);
+			ItemsOnGround.Sort();
 		}
 	}
 }
