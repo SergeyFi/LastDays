@@ -7,6 +7,8 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/SphereComponent.h"
 
+// Item base - base class in inventory system
+
 // Sets default values
 AItemBase::AItemBase()
 {

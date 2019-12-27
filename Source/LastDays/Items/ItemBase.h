@@ -7,6 +7,8 @@
 #include "Interfaces/ObjectInteractionInterface.h"
 #include "ItemBase.generated.h"
 
+// Item base - base class in inventory system
+
 UCLASS()
 class LASTDAYS_API AItemBase : public AActor, public IObjectInteractionInterface
 {

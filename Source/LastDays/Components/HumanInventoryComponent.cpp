@@ -8,6 +8,8 @@
 #include "TimerManager.h"
 #include "Net/UnrealNetwork.h"
 
+// HumanInventory component - that component is used to implement the inventory system in human like characters
+
 UHumanInventoryComponent::UHumanInventoryComponent()
 {
 	CheckRadius = 200.f;

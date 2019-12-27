@@ -4,6 +4,7 @@
 #include "InventoryComponent.h"
 #include "Net/UnrealNetwork.h"
 
+// Inventory component - that component is used to implement the inventory system in items
 
 // Sets default values for this component's properties
 UInventoryComponent::UInventoryComponent()
