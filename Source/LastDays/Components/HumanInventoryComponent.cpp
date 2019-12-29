@@ -81,3 +81,72 @@ void UHumanInventoryComponent::AddActorToGroundItem(TArray<FHitResult> HitResult
 		}
 	}
 }
+
+void UHumanInventoryComponent::AddItemFromGround_Implementation(AItemBase* ItemGround)
+{
+	for (AItemBase* Item : ItemsOnGround)
+	{
+		if (Item == ItemGround)
+		{
+			AddItemToInventory(ItemGround);
+		}
+	}
+}
+
+
+bool UHumanInventoryComponent::GroundItemIsChanged()
+{
+	static TArray<FText> ItemsOnGroundName;
+
+	if (ItemsOnGround.Num() == 0)
+	{
+		ItemsOnGroundName.Empty();
+		return true;
+	}
+	else
+	{
+		if (ItemsOnGroundName.Num() == ItemsOnGround.Num())
+		{
+			for (int32 i = 0; i < ItemsOnGround.Num(); i++)
+			{
+				if (!ItemsOnGroundName[i].EqualTo(ItemsOnGround[i]->GetObjectName()))
+				{
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		else
+		{
+			ItemsOnGroundName.Empty();
+
+			for (AItemBase* Item : ItemsOnGround)
+			{
+				if (Item != nullptr)
+				{
+					ItemsOnGroundName.Add(Item->GetObjectName());
+				}
+			}
+
+			return true;
+		}
+	}
+}
+
+bool UHumanInventoryComponent::InventoryIsChanged()
+{
+	static int32 ItemCount;
+
+	int32 CurrentItemCount = GetItemCount();
+	if (ItemCount != CurrentItemCount)
+	{
+		ItemCount = CurrentItemCount;
+
+		return true;
+	}
+
+	return false;
+}
+

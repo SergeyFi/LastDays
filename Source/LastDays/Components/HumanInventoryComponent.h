@@ -6,7 +6,6 @@
 #include "Components/InventoryComponent.h"
 #include "HumanInventoryComponent.generated.h"
 
-
 UCLASS()
 class LASTDAYS_API UHumanInventoryComponent : public UInventoryComponent
 {
@@ -39,6 +38,12 @@ protected:
 
 	void AddActorToGroundItem(TArray<FHitResult> HitResults);
 
+	UFUNCTION(BlueprintCallable)
+	bool GroundItemIsChanged();
+
+	UFUNCTION(BlueprintCallable)
+	bool InventoryIsChanged();
+
 public:
 
 	UFUNCTION(Server, Reliable, BlueprintCallable)
@@ -46,6 +51,9 @@ public:
 
 	UFUNCTION(Server, Reliable, BlueprintCallable)
 	void StopCheckGround();
+
+	UFUNCTION(Server, Reliable, BlueprintCallable)
+	void AddItemFromGround(AItemBase* ItemGround);
 
 	virtual void GetLifetimeReplicatedProps(TArray < class FLifetimeProperty >& OutLifetimeProps) const override;
 
