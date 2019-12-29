@@ -33,6 +33,8 @@ void UInventoryComponent::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >
 
 void UInventoryComponent::AddItemToInventory_Implementation(class AItemBase* Item)
 {
+	OnAddItem.Broadcast();
+
 	if (Item != nullptr)
 	{
 		int32 ItemAmount = ItemAmountCanAdd(Item);
@@ -54,6 +56,8 @@ void UInventoryComponent::AddItemToInventory_Implementation(class AItemBase* Ite
 			}
 
 			UpdateWeight();
+
+			OnAddItem.Broadcast();
 		}
 	}
 }
@@ -87,4 +91,16 @@ void UInventoryComponent::UpdateWeight()
 	{
 		WeightCurrent += Inventory[i].Weight;
 	}
+}
+
+int32 UInventoryComponent::GetItemCount()
+{
+	int32 TotalItemCount = 0;
+
+	for (FInventoryItem Item : Inventory)
+	{
+		TotalItemCount += Item.ItemCount;
+	}
+
+	return TotalItemCount;
 }

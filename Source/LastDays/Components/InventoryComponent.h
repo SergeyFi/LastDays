@@ -7,6 +7,7 @@
 #include "Items/ItemBase.h"
 #include "InventoryComponent.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FInventoryActionDelegate);
 
 USTRUCT(BlueprintType)
 struct FInventoryItem
@@ -98,4 +99,9 @@ public:
 	void AddItemToInventory(class AItemBase* Item);
 	
 	virtual void GetLifetimeReplicatedProps(TArray < class FLifetimeProperty >& OutLifetimeProps) const override;
+
+	int32 GetItemCount();
+
+	UPROPERTY(BlueprintAssignable, Category = "Inventory")
+	FInventoryActionDelegate OnAddItem;
 };
