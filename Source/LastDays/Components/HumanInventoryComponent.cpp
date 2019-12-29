@@ -68,27 +68,39 @@ void UHumanInventoryComponent::AddActorToGroundItem(TArray<FHitResult> HitResult
 {
 	ItemsOnGround.Empty();
 
-	AItemBase* Item = nullptr;
+	TArray<AItemBase*> ItemBaseOnGround;
 
 	for (FHitResult Hit : HitResults)
 	{
-		Item = Cast<AItemBase>(Hit.Actor);
+		AItemBase* ItemBase = Cast<AItemBase>(Hit.Actor);
 
+		if (ItemBase != nullptr)
+		{
+			ItemBaseOnGround.AddUnique(ItemBase);
+		}
+	}
+
+	ItemBaseOnGround.Sort();
+
+	for (AItemBase* Item : ItemBaseOnGround)
+	{
 		if (Item != nullptr)
 		{
-			ItemsOnGround.AddUnique(Item);
-			ItemsOnGround.Sort();
+			ItemsOnGround.Add(FInventoryItem(Item, Item->GetItemCount()));
 		}
 	}
 }
 
 void UHumanInventoryComponent::AddItemFromGround_Implementation(AItemBase* ItemGround)
 {
-	for (AItemBase* Item : ItemsOnGround)
+	if (ItemGround != nullptr)
 	{
-		if (Item == ItemGround)
+		for (FInventoryItem InventoryItem : ItemsOnGround)
 		{
-			AddItemToInventory(ItemGround);
+			if (InventoryItem.Item == ItemGround)
+			{
+				AddItemToInventory(ItemGround);
+			}
 		}
 	}
 }
@@ -96,43 +108,18 @@ void UHumanInventoryComponent::AddItemFromGround_Implementation(AItemBase* ItemG
 
 bool UHumanInventoryComponent::GroundItemIsChanged()
 {
-	static TArray<FText> ItemsOnGroundName;
+	static int32 ItemOnGroundCount;
 
-	if (ItemsOnGround.Num() == 0)
+	int32 ItemsOnGroundCountCurrent = GetItemsOnGroundCount();
+
+	if (ItemOnGroundCount != ItemsOnGroundCountCurrent)
 	{
-		ItemsOnGroundName.Empty();
+		ItemOnGroundCount = ItemsOnGroundCountCurrent;
+
 		return true;
 	}
-	else
-	{
-		if (ItemsOnGroundName.Num() == ItemsOnGround.Num())
-		{
-			for (int32 i = 0; i < ItemsOnGround.Num(); i++)
-			{
-				if (!ItemsOnGroundName[i].EqualTo(ItemsOnGround[i]->GetObjectName()))
-				{
-					return true;
-				}
-			}
 
-			return false;
-		}
-
-		else
-		{
-			ItemsOnGroundName.Empty();
-
-			for (AItemBase* Item : ItemsOnGround)
-			{
-				if (Item != nullptr)
-				{
-					ItemsOnGroundName.Add(Item->GetObjectName());
-				}
-			}
-
-			return true;
-		}
-	}
+	return false;
 }
 
 bool UHumanInventoryComponent::InventoryIsChanged()
@@ -150,3 +137,17 @@ bool UHumanInventoryComponent::InventoryIsChanged()
 	return false;
 }
 
+int32 UHumanInventoryComponent::GetItemsOnGroundCount()
+{
+	int32 ItemsOnGroundCount = 0;
+
+	for (FInventoryItem InventoryItem : ItemsOnGround)
+	{
+		if (InventoryItem.Item != nullptr)
+		{
+			ItemsOnGroundCount += InventoryItem.Item->GetItemCount();
+		}
+	}
+
+	return ItemsOnGroundCount;
+}

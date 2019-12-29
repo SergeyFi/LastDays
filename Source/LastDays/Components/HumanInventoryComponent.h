@@ -20,7 +20,7 @@ protected:
 	class AHumanCharacter* HumanOwner;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Properties", Replicated)
-	TArray<AItemBase*> ItemsOnGround;
+	TArray<FInventoryItem> ItemsOnGround;
 
 	TArray<AActor*> InventoriesOnGround;
 
@@ -56,5 +56,7 @@ public:
 	void AddItemFromGround(AItemBase* ItemGround);
 
 	virtual void GetLifetimeReplicatedProps(TArray < class FLifetimeProperty >& OutLifetimeProps) const override;
+
+	int32 GetItemsOnGroundCount();
 
 };
