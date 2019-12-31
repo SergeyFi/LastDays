@@ -36,6 +36,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Properties")
 	float GroundCheckPeriod;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Properties")
+	FTransform ObjectDropTransform;
+
 	void AddActorToGroundItem(TArray<FHitResult> HitResults);
 
 	UFUNCTION(BlueprintCallable)
@@ -54,6 +57,9 @@ public:
 
 	UFUNCTION(Server, Reliable, BlueprintCallable)
 	void AddItemFromGround(AItemBase* ItemGround);
+
+	UFUNCTION(Server, Reliable, BlueprintCallable)
+	void DropItemFromInventory(const FString& ObjectName);
 
 	virtual void GetLifetimeReplicatedProps(TArray < class FLifetimeProperty >& OutLifetimeProps) const override;
 

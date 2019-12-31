@@ -151,3 +151,30 @@ int32 UHumanInventoryComponent::GetItemsOnGroundCount()
 
 	return ItemsOnGroundCount;
 }
+
+void UHumanInventoryComponent::DropItemFromInventory_Implementation(const FString &ObjectName)
+{
+	UE_LOG(LogTemp, Warning, TEXT("DropItemFromInventory start"));
+
+	for (FInventoryItem InventoryItem : Inventory)
+	{
+		if (InventoryItem.ObjectName.Equals(ObjectName))
+		{
+			UWorld* World = GetWorld();
+
+			UE_LOG(LogTemp, Warning, TEXT("Item found"));
+
+			if (World != nullptr && InventoryItem.Item != nullptr)
+			{
+				FActorSpawnParameters SpawnParams;
+				SpawnParams.Template = InventoryItem.Item;
+
+				FTransform SpawnTransform = HumanOwner->GetTransform() + ObjectDropTransform;
+
+				World->SpawnActor<AItemBase>(InventoryItem.Item->GetBPItem(), SpawnTransform, SpawnParams);
+
+				UE_LOG(LogTemp, Warning, TEXT("Item spawned"));
+			}
+		}
+	}
+}

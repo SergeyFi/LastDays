@@ -37,6 +37,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	bool bIsStackable;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FString ObjectName;
+
 	FInventoryItem()
 	{
 	}
@@ -50,6 +53,7 @@ public:
 		this->Description = Item->GetDescription();
 		Weight = Item->GetWeightTotal();
 		bIsStackable = Item->IsInventoryStackable();
+		ObjectName = *Item->GetName();
 	}
 
 	void AppendItem(int32 CountItem)
