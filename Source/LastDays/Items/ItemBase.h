@@ -44,6 +44,9 @@ protected:
 	UTexture2D* Icon;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties|Base")
+	TSubclassOf<AItemBase> BPItem;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties|Base")
 	float Condition;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties|Base")
@@ -91,4 +94,6 @@ public:
 	int32 RemoveItems(int32 ItemCount);
 
 	FText GetDescription();
+
+	TSubclassOf<AItemBase> GetBPItem();
 };

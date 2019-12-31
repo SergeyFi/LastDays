@@ -111,3 +111,8 @@ FText AItemBase::GetDescription()
 {
 	return Description;
 }
+
+TSubclassOf<AItemBase> AItemBase::GetBPItem()
+{
+	return BPItem;
+}
