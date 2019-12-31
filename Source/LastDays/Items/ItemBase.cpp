@@ -116,3 +116,8 @@ TSubclassOf<AItemBase> AItemBase::GetBPItem()
 {
 	return BPItem;
 }
+
+FItemData AItemBase::GetItemData()
+{
+	return FItemData(ItemCount, Condition, BPItem);
+}

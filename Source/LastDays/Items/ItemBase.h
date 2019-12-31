@@ -9,6 +9,32 @@
 
 // Item base - base class in inventory system
 
+USTRUCT(BlueprintType)
+struct FItemData
+{
+	GENERATED_BODY()
+
+public:
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	int32 ItemCount;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	float Condition;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TSubclassOf<class AItemBase> BPItem;
+
+	FItemData(){}
+
+	FItemData(int32 ItemCount, float Condition, TSubclassOf<class AItemBase> BPItem)
+	{
+		this->ItemCount = ItemCount;
+		this->Condition = Condition;
+		this->BPItem = BPItem;
+	}
+};
+
 UCLASS()
 class LASTDAYS_API AItemBase : public AActor, public IObjectInteractionInterface
 {
@@ -96,4 +122,6 @@ public:
 	FText GetDescription();
 
 	TSubclassOf<AItemBase> GetBPItem();
+
+	virtual FItemData GetItemData();
 };
