@@ -7,6 +7,8 @@
 #include "Engine/World.h"
 #include "TimerManager.h"
 #include "Net/UnrealNetwork.h"
+#include "Kismet/GameplayStatics.h"
+#include "Components/SkeletalMeshComponent.h"
 
 // HumanInventory component - that component is used to implement the inventory system in human like characters
 
@@ -68,7 +70,7 @@ void UHumanInventoryComponent::AddActorToGroundItem(TArray<FHitResult> HitResult
 {
 	ItemsOnGround.Empty();
 
-	TArray<AItemBase*> ItemBaseOnGround;
+	ItemsBaseOnGround.Empty();
 
 	for (FHitResult Hit : HitResults)
 	{
@@ -76,13 +78,13 @@ void UHumanInventoryComponent::AddActorToGroundItem(TArray<FHitResult> HitResult
 
 		if (ItemBase != nullptr)
 		{
-			ItemBaseOnGround.AddUnique(ItemBase);
+			ItemsBaseOnGround.AddUnique(ItemBase);
 		}
 	}
 
-	ItemBaseOnGround.Sort();
+	ItemsBaseOnGround.Sort();
 
-	for (AItemBase* Item : ItemBaseOnGround)
+	for (AItemBase* Item : ItemsBaseOnGround)
 	{
 		if (Item != nullptr)
 		{
@@ -91,15 +93,16 @@ void UHumanInventoryComponent::AddActorToGroundItem(TArray<FHitResult> HitResult
 	}
 }
 
-void UHumanInventoryComponent::AddItemFromGround_Implementation(AItemBase* ItemGround)
+void UHumanInventoryComponent::AddItemFromGround_Implementation(FItemData ItemDataGround)
 {
-	if (ItemGround != nullptr)
+	for (AItemBase* ItemBase : ItemsBaseOnGround)
 	{
-		for (FInventoryItem InventoryItem : ItemsOnGround)
+		if (ItemBase != nullptr)
 		{
-			if (InventoryItem.Item == ItemGround)
+			if (ItemBase->GetItemData() == ItemDataGround)
 			{
-				AddItemToInventory(ItemGround);
+				AddItemToInventory(ItemBase);
+				break;
 			}
 		}
 	}
@@ -143,37 +146,36 @@ int32 UHumanInventoryComponent::GetItemsOnGroundCount()
 
 	for (FInventoryItem InventoryItem : ItemsOnGround)
 	{
-		if (InventoryItem.Item != nullptr)
-		{
-			ItemsOnGroundCount += InventoryItem.Item->GetItemCount();
-		}
+		ItemsOnGroundCount += InventoryItem.ItemCount;
 	}
 
 	return ItemsOnGroundCount;
 }
 
-void UHumanInventoryComponent::DropItemFromInventory_Implementation(const FString &ObjectName)
+void UHumanInventoryComponent::DropItemFromInventory_Implementation(FItemData ItemData)
 {
-	UE_LOG(LogTemp, Warning, TEXT("DropItemFromInventory start"));
 
-	for (FInventoryItem InventoryItem : Inventory)
+	for (int32 i = 0; i < Inventory.Num(); i++)
 	{
-		if (InventoryItem.ObjectName.Equals(ObjectName))
+		if (Inventory[i].ItemData == ItemData)
 		{
 			UWorld* World = GetWorld();
 
-			UE_LOG(LogTemp, Warning, TEXT("Item found"));
-
-			if (World != nullptr && InventoryItem.Item != nullptr)
+			if (World != nullptr)
 			{
 				FActorSpawnParameters SpawnParams;
-				SpawnParams.Template = InventoryItem.Item;
 
 				FTransform SpawnTransform = HumanOwner->GetTransform() + ObjectDropTransform;
+				AItemBase* ItemToSpawn = World->SpawnActorDeferred<AItemBase>(Inventory[i].ItemData.BPItem, SpawnTransform);
 
-				World->SpawnActor<AItemBase>(InventoryItem.Item->GetBPItem(), SpawnTransform, SpawnParams);
+				ItemToSpawn->SetItemData(ItemData);
+				ItemToSpawn->SetItemCount(Inventory[i].RemoveItem());
 
-				UE_LOG(LogTemp, Warning, TEXT("Item spawned"));
+				if (Inventory[i].ItemCount == 0) Inventory.RemoveAt(i);
+
+				UGameplayStatics::FinishSpawningActor(ItemToSpawn, SpawnTransform);
+
+				break;
 			}
 		}
 	}

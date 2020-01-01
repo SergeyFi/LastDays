@@ -17,9 +17,6 @@ struct FItemData
 public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	int32 ItemCount;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	float Condition;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
@@ -27,11 +24,15 @@ public:
 
 	FItemData(){}
 
-	FItemData(int32 ItemCount, float Condition, TSubclassOf<class AItemBase> BPItem)
+	FItemData(float Condition, TSubclassOf<class AItemBase> BPItem)
 	{
-		this->ItemCount = ItemCount;
 		this->Condition = Condition;
 		this->BPItem = BPItem;
+	}
+
+	bool operator == (const FItemData &ItemData)
+	{
+		return Condition == ItemData.Condition && BPItem == ItemData.BPItem;
 	}
 };
 
@@ -109,6 +110,8 @@ public:
 
 	int32 GetItemCount();
 
+	void SetItemCount(int32 ItemCount);
+
 	float GetCondition();
 
 	float GetWeight();
@@ -124,4 +127,10 @@ public:
 	TSubclassOf<AItemBase> GetBPItem();
 
 	virtual FItemData GetItemData();
+
+	virtual void SetItemData(FItemData& ItemData);
+
+	USkeletalMeshComponent* GetMesh();
+
+	int32 GetStackSize();
 };

@@ -14,22 +14,20 @@ struct FInventoryItem
 {
 	GENERATED_BODY()
 
+protected:
+
+	void CalculateWeight()
+	{
+		Weight = this->ItemCount * this->ItemData.BPItem.GetDefaultObject()->GetWeight();
+	}
+
 public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	class AItemBase* Item;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	FText ItemName;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	FText Description;
+	FItemData ItemData;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	int32 ItemCount;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	float Condition;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	float Weight;
@@ -37,29 +35,40 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	bool bIsStackable;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	FString ObjectName;
-
 	FInventoryItem()
 	{
 	}
 
 	FInventoryItem(class AItemBase* Item, int32 ItemCount)
 	{
-		this->Item = Item;
-		this->ItemName = Item->GetItemName();
+		this->ItemData = Item->GetItemData();
 		this->ItemCount = ItemCount;
-		this->Condition = Item->GetCondition();
-		this->Description = Item->GetDescription();
 		Weight = Item->GetWeightTotal();
 		bIsStackable = Item->IsInventoryStackable();
-		ObjectName = *Item->GetName();
 	}
 
 	void AppendItem(int32 CountItem)
 	{
 		this->ItemCount += CountItem;
-		Weight = this->ItemCount * Item->GetWeight();
+		CalculateWeight();
+	}
+
+	int32 RemoveItem()
+	{
+		if (ItemCount <= ItemData.BPItem.GetDefaultObject()->GetStackSize())
+		{
+			int32 ItemCountToDrop = ItemCount;
+			ItemCount = 0;
+
+			return ItemCountToDrop;
+		}
+		else
+		{
+			int32 ItemCountToDrop = ItemData.BPItem.GetDefaultObject()->GetStackSize();
+			ItemCount -= ItemCountToDrop;
+
+			return ItemCountToDrop;
+		}
 	}
 };
 

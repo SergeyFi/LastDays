@@ -22,6 +22,8 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Properties", Replicated)
 	TArray<FInventoryItem> ItemsOnGround;
 
+	TArray<AItemBase*> ItemsBaseOnGround;
+
 	TArray<AActor*> InventoriesOnGround;
 
 	FTimerHandle GroundCheckTimer;
@@ -56,10 +58,10 @@ public:
 	void StopCheckGround();
 
 	UFUNCTION(Server, Reliable, BlueprintCallable)
-	void AddItemFromGround(AItemBase* ItemGround);
+	void AddItemFromGround(FItemData ItemDataGround);
 
 	UFUNCTION(Server, Reliable, BlueprintCallable)
-	void DropItemFromInventory(const FString& ObjectName);
+	void DropItemFromInventory(FItemData ItemData);
 
 	virtual void GetLifetimeReplicatedProps(TArray < class FLifetimeProperty >& OutLifetimeProps) const override;
 

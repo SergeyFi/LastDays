@@ -46,8 +46,7 @@ void UInventoryComponent::AddItemToInventory_Implementation(class AItemBase* Ite
 			if (InventoryIndex == -1 || !Item->IsInventoryStackable())
 			{
 				// Create new inventory slot
-				AItemBase* ItemDuplicated = DuplicateObject(Item, this);
-				Inventory.Add(FInventoryItem(ItemDuplicated, Item->RemoveItems(ItemAmount)));
+				Inventory.Add(FInventoryItem(Item, Item->RemoveItems(ItemAmount)));
 			}
 			else
 			{
@@ -67,7 +66,7 @@ int32 UInventoryComponent::GetItemIndex(AItemBase* Item)
 {
 	for (int32 i = 0; i < Inventory.Num(); i++)
 	{
-		if (Inventory[i].ItemName.EqualTo(Item->GetItemName()) && Inventory[i].Condition == Item->GetCondition())
+		if (Inventory[i].ItemData == Item->GetItemData())
 		{
 			return i;
 		}

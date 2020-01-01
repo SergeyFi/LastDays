@@ -75,6 +75,11 @@ int32 AItemBase::GetItemCount()
 	return ItemCount;
 }
 
+void AItemBase::SetItemCount(int32 ItemCount)
+{
+	this->ItemCount = ItemCount;
+}
+
 float AItemBase::GetCondition()
 {
 	return Condition;
@@ -119,5 +124,20 @@ TSubclassOf<AItemBase> AItemBase::GetBPItem()
 
 FItemData AItemBase::GetItemData()
 {
-	return FItemData(ItemCount, Condition, BPItem);
+	return FItemData(Condition, BPItem);
+}
+
+void AItemBase::SetItemData(FItemData& ItemData)
+{
+	Condition = ItemData.Condition;
+}
+
+USkeletalMeshComponent* AItemBase::GetMesh()
+{
+	return SkeletalMesh;
+}
+
+int32 AItemBase::GetStackSize()
+{
+	return StackSize;
 }
