@@ -19,11 +19,12 @@ AItemBase::AItemBase()
 	StackSize = 1;
 	ItemCount = StackSize;
 	Condition = 100.f;
-	Weight = 1.f;
+	Capacity = 1.f;
 	bIsInventoryStackable = true;
 	ItemName = FText::FromString(TEXT("None"));
 	ActionName = FText::FromString(TEXT("None"));
 	Description = FText::FromString(TEXT("None"));
+	BPItem = this->GetClass();
 
 	// Components	
 	SkeletalMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalMesh"));
@@ -41,7 +42,7 @@ void AItemBase::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (Weight == 0.f) Weight = 0.001;
+	if (Capacity == 0.f) Capacity = 0.001;
 	
 }
 
@@ -82,14 +83,14 @@ float AItemBase::GetCondition()
 	return Condition;
 }
 
-float AItemBase::GetWeight()
+float AItemBase::GetCapacity()
 {
-	return Weight;
+	return Capacity;
 }
 
-float AItemBase::GetWeightTotal()
+float AItemBase::GetCapacityTotal()
 {
-	return Weight * ItemCount;
+	return Capacity * ItemCount;
 }
 
 bool AItemBase::IsInventoryStackable()

@@ -16,9 +16,9 @@ struct FInventoryItem
 
 protected:
 
-	void CalculateWeight()
+	void CalculateCapacity()
 	{
-		Weight = this->ItemCount * this->ItemData.BPItem.GetDefaultObject()->GetWeight();
+		Capacity = this->ItemCount * this->ItemData.BPItem.GetDefaultObject()->GetCapacity();
 	}
 
 public:
@@ -30,7 +30,7 @@ public:
 	int32 ItemCount;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	float Weight;
+	float Capacity;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	bool bIsStackable;
@@ -43,14 +43,16 @@ public:
 	{
 		this->ItemData = Item->GetItemData();
 		this->ItemCount = ItemCount;
-		Weight = Item->GetWeightTotal();
+		Capacity = Item->GetCapacityTotal();
 		bIsStackable = Item->IsInventoryStackable();
+
+		CalculateCapacity();
 	}
 
 	void AppendItem(int32 CountItem)
 	{
 		this->ItemCount += CountItem;
-		CalculateWeight();
+		CalculateCapacity();
 	}
 
 	int32 RemoveItem()
@@ -89,22 +91,16 @@ protected:
 	TArray<FInventoryItem> Inventory;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Properties")
-	float WeightCurrent;
+	float CapacityCurrent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
-	float WeightMax;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Properties")
-	float VolumeCurrent;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
-	float VolumeMax;
+	float CapacityMax;
 
 	int32 GetItemIndex(class AItemBase* Item);
 
 	int32 ItemAmountCanAdd(class AItemBase* Item);
 
-	void UpdateWeight();
+	void UpdateCapacity();
 
 public:
 

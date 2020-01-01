@@ -14,7 +14,7 @@ UInventoryComponent::UInventoryComponent()
 	bNetAddressable = true;
 
 	// Inventory default properties
-	WeightMax = 10.f;
+	CapacityMax = 10.f;
 }
 
 
@@ -54,7 +54,7 @@ void UInventoryComponent::AddItemToInventory_Implementation(class AItemBase* Ite
 				Inventory[InventoryIndex].AppendItem(Item->RemoveItems(ItemAmount));
 			}
 
-			UpdateWeight();
+			UpdateCapacity();
 
 			OnAddItem.Broadcast();
 		}
@@ -77,18 +77,18 @@ int32 UInventoryComponent::GetItemIndex(AItemBase* Item)
 
 int32 UInventoryComponent::ItemAmountCanAdd(AItemBase* Item)
 {
-	int32 ItemCanAddByWeight = (WeightMax - WeightCurrent) / Item->GetWeight();
+	int32 ItemCanAddByWeight = (CapacityMax - CapacityCurrent) / Item->GetCapacity();
 
 	return FMath::Clamp(ItemCanAddByWeight, 0, Item->GetItemCount());
 }
 
-void UInventoryComponent::UpdateWeight()
+void UInventoryComponent::UpdateCapacity()
 {
-	WeightCurrent = 0.f;
+	CapacityCurrent = 0.f;
 
 	for (int32 i = 0; i < Inventory.Num(); i++)
 	{
-		WeightCurrent += Inventory[i].Weight;
+		CapacityCurrent += Inventory[i].Capacity;
 	}
 }
 
