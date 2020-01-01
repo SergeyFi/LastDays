@@ -25,14 +25,11 @@ AItemBase::AItemBase()
 	ActionName = FText::FromString(TEXT("None"));
 	Description = FText::FromString(TEXT("None"));
 
-	// Components
-	Root = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
-	RootComponent = Root;
-	
+	// Components	
 	SkeletalMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalMesh"));
-	SkeletalMesh->SetupAttachment(Root);
 	SkeletalMesh->SetSimulatePhysics(true);
 	SkeletalMesh->SetCollisionProfileName(TEXT("Ragdoll"));
+	RootComponent = SkeletalMesh;
 
 	SphereCollision = CreateDefaultSubobject<USphereComponent>(TEXT("SphereCollision"));
 	SphereCollision->SetupAttachment(SkeletalMesh);
