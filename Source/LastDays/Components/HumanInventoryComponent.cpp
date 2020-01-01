@@ -14,7 +14,7 @@
 
 UHumanInventoryComponent::UHumanInventoryComponent()
 {
-	CheckRadius = 200.f;
+	CheckRadius = 500.f;
 	GroundCheckPeriod = 0.2;
 
 	HumanOwner = Cast<AHumanCharacter>(GetOwner());
@@ -165,7 +165,8 @@ void UHumanInventoryComponent::DropItemFromInventory_Implementation(FItemData It
 			{
 				FActorSpawnParameters SpawnParams;
 
-				FTransform SpawnTransform = HumanOwner->GetTransform() + ObjectDropTransform;
+				FTransform SpawnTransform = HumanOwner->GetTransform();
+				SpawnTransform.SetLocation(SpawnTransform.GetLocation() + HumanOwner->GetActorForwardVector() * ObjectDropDistance);
 				AItemBase* ItemToSpawn = World->SpawnActorDeferred<AItemBase>(Inventory[i].ItemData.BPItem, SpawnTransform);
 
 				ItemToSpawn->SetItemData(ItemData);
@@ -173,7 +174,8 @@ void UHumanInventoryComponent::DropItemFromInventory_Implementation(FItemData It
 
 				if (Inventory[i].ItemCount == 0) Inventory.RemoveAt(i);
 
-				UGameplayStatics::FinishSpawningActor(ItemToSpawn, SpawnTransform);
+				AItemBase* SpawnedItem = Cast<AItemBase>(UGameplayStatics::FinishSpawningActor(ItemToSpawn, SpawnTransform));
+				SpawnedItem->GetMesh()->AddImpulse(SpawnedItem->GetActorForwardVector() * 3000.f);
 
 				break;
 			}

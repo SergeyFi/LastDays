@@ -39,7 +39,7 @@ protected:
 	float GroundCheckPeriod;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Properties")
-	FTransform ObjectDropTransform;
+	float ObjectDropDistance;
 
 	void AddActorToGroundItem(TArray<FHitResult> HitResults);
 
