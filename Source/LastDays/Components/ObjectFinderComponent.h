@@ -22,20 +22,42 @@ protected:
 
 	class AHumanCharacter* HumanOwner;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	class AActor* InteractableObject;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	float ObjectCheckPeriod;
 
-	UFUNCTION(Server, Reliable)
-	void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	float SphereCheckRadius;
 
-	UFUNCTION(Server, Reliable)
-	void OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	float Lenght;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	AActor* CurrentActor;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FVector StartLocationCopy;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FVector EndLocationCopy;
+
+	class IObjectInteractionInterface* InteractionObject;
+
+	FTimerHandle ObjectFinderTimer;
 
 	UFUNCTION(Client, Reliable)
-	void UpdateInterObjectOnClient(class AActor* InterObject);
+	void StartObjectFinder();
+
+	UFUNCTION(Client, Reliable)
+	void StopObjectFinder();
+
+	UFUNCTION(Client, Reliable)
+	void FindObjectToInteract();
+
+	UFUNCTION(Server, Unreliable, WithValidation)
+	void ValidateFindObjectParameters(float SphereCheckRadiusToCheck, float LenghtToCheck);
 
 public:
 
-	UFUNCTION(Server, Reliable)
+	UFUNCTION(Client, Reliable)
 	void UseInteractableObject();
 };
