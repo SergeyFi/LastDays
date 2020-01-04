@@ -19,8 +19,6 @@ UHumanInventoryComponent::UHumanInventoryComponent()
 
 	HumanOwner = Cast<AHumanCharacter>(GetOwner());
 
-	SphereGroundChecker = FCollisionShape::MakeSphere(CheckRadius);
-
 }
 
 void UHumanInventoryComponent::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const
@@ -52,13 +50,13 @@ void UHumanInventoryComponent::StopCheckGround_Implementation()
 	}
 }
 
-void UHumanInventoryComponent::CheckGround()
+void UHumanInventoryComponent::CheckGround_Implementation()
 {
 	FVector Location = HumanOwner->GetActorLocation();
 
 	TArray<FHitResult> OutHits;
 
-	bool bIsHit = GetWorld()->SweepMultiByChannel(OutHits, Location, Location + 1.f, FQuat::Identity, ECC_WorldStatic, SphereGroundChecker);
+	bool bIsHit = GetWorld()->SweepMultiByChannel(OutHits, Location, Location + 1.f, FQuat::Identity, ECC_WorldStatic, FCollisionShape::MakeSphere(CheckRadius));
 
 	if (bIsHit)
 	{
@@ -66,7 +64,7 @@ void UHumanInventoryComponent::CheckGround()
 	}
 }
 
-void UHumanInventoryComponent::AddActorToGroundItem(TArray<FHitResult> HitResults)
+void UHumanInventoryComponent::AddActorToGroundItem_Implementation(const TArray<FHitResult> &HitResults)
 {
 	ItemsOnGround.Empty();
 

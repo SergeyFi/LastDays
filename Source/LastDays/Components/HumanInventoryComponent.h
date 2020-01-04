@@ -28,10 +28,6 @@ protected:
 
 	FTimerHandle GroundCheckTimer;
 
-	struct FCollisionShape SphereGroundChecker;
-
-	void CheckGround();
-
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Properties")
 	float CheckRadius;
 
@@ -41,7 +37,11 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Properties")
 	float ObjectDropDistance;
 
-	void AddActorToGroundItem(TArray<FHitResult> HitResults);
+	UFUNCTION(Server, Reliable)
+	void CheckGround();
+
+	UFUNCTION(Server, Reliable)
+	void AddActorToGroundItem(const TArray<FHitResult> &HitResults);
 
 	UFUNCTION(BlueprintCallable)
 	bool GroundItemIsChanged();
