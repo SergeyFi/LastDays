@@ -32,7 +32,7 @@ public:
 
 	bool operator == (const FItemData &ItemData)
 	{
-		return Condition == ItemData.Condition && BPItem == ItemData.BPItem;
+		return FMath::IsNearlyEqual(Condition,ItemData.Condition) && BPItem == ItemData.BPItem;
 	}
 };
 

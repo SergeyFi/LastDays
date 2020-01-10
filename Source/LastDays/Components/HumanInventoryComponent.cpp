@@ -162,20 +162,19 @@ void UHumanInventoryComponent::DropItemFromInventory_Implementation(FItemData It
 			if (World != nullptr)
 			{
 				FActorSpawnParameters SpawnParams;
-
 				FTransform SpawnTransform = HumanOwner->GetTransform();
 				SpawnTransform.SetLocation(SpawnTransform.GetLocation() + HumanOwner->GetActorForwardVector() * ObjectDropDistance);
 				AItemBase* ItemToSpawn = World->SpawnActorDeferred<AItemBase>(Inventory[i].ItemData.BPItem, SpawnTransform);
 
+				int32 RemovedItem = Inventory[i].GetRemovedItem();
 				ItemToSpawn->SetItemData(ItemData);
-				ItemToSpawn->SetItemCount(Inventory[i].RemoveItem());
+				ItemToSpawn->SetItemCount(RemovedItem);
 
 				if (Inventory[i].ItemCount == 0) Inventory.RemoveAt(i);
 
 				AItemBase* SpawnedItem = Cast<AItemBase>(UGameplayStatics::FinishSpawningActor(ItemToSpawn, SpawnTransform));
-				SpawnedItem->GetMesh()->AddImpulse(SpawnedItem->GetActorForwardVector() * 3000.f);
+				//SpawnedItem->GetMesh()->AddImpulse(SpawnedItem->GetActorForwardVector() * 3000.f);
 
-				break;
 			}
 		}
 	}

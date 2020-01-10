@@ -80,7 +80,7 @@ void UHungerComponent::UpdateStarvationThirstClient_Implementation(float Starvat
 
 bool UHungerComponent::IsStarving()
 {
-	if (Starvation == 0.f)
+	if (Starvation <= 0.f)
 	{
 		return true;
 	}
@@ -89,7 +89,7 @@ bool UHungerComponent::IsStarving()
 
 bool UHungerComponent::IsThirsty()
 {
-	if (Thirst == 0.f)
+	if (Thirst <= 0.f)
 	{
 		return true;
 	}

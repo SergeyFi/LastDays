@@ -18,7 +18,9 @@ protected:
 
 	void CalculateCapacity()
 	{
-		Capacity = this->ItemCount * this->ItemData.BPItem.GetDefaultObject()->GetCapacity();
+		AItemBase* DefaultObject = ItemData.BPItem.GetDefaultObject();
+		
+		if (DefaultObject != nullptr) Capacity = ItemCount * DefaultObject->GetCapacity();
 	}
 
 public:
@@ -55,9 +57,11 @@ public:
 		CalculateCapacity();
 	}
 
-	int32 RemoveItem()
+	int32 GetRemovedItem()
 	{
-		if (ItemCount <= ItemData.BPItem.GetDefaultObject()->GetStackSize())
+		AItemBase* DefaultObject = ItemData.BPItem.GetDefaultObject();
+
+		if (ItemCount <= DefaultObject->GetStackSize())
 		{
 			int32 ItemCountToDrop = ItemCount;
 			ItemCount = 0;
@@ -66,12 +70,13 @@ public:
 		}
 		else
 		{
-			int32 ItemCountToDrop = ItemData.BPItem.GetDefaultObject()->GetStackSize();
+			int32 ItemCountToDrop = DefaultObject->GetStackSize();
 			ItemCount -= ItemCountToDrop;
 
 			return ItemCountToDrop;
 		}
 	}
+
 };
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )

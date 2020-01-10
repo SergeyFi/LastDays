@@ -157,7 +157,7 @@ float UMovementHandlerComponent::GetCurrentSpeed()
 
 bool UMovementHandlerComponent::IsIdle()
 {
-	if (GetCurrentSpeed() == 0.f || OwnerCharacter->GetCharacterMovement()->IsFalling())
+	if (FMath::IsNearlyZero(GetCurrentSpeed()) || OwnerCharacter->GetCharacterMovement()->IsFalling())
 	{
 		return true;
 	}
